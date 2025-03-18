@@ -5,6 +5,7 @@ st.title("🔨 Craft Dofus 🔨")
 
 search_query = st.text_input("Recherche d'un item :", "")
 
+# Fonction pour rechercher des items
 def search_items(query):
     if not query:
         return []
@@ -22,46 +23,52 @@ def search_items(query):
     else:
         return []
 
-def get_recipe_summary(item_ankama_id):
-    # URL pour rechercher les recettes par l'ID de l'item
-    url = "https://api.dofusdu.de/dofus3/v1/fr/recipes/search"
+# Affiche les détails complets d'un item
+def display_item_details(item):
+    st.subheader(f"Détails de l'item : {item['name']}")
+    st.write(f"**ID** : {item['ankama_id']}")
+    st.write(f"**Type** : {item['type']['name']}")
+    st.write(f"**Niveau** : {item['level']}")
+    st.write(f"**Sous-type d'item** : {item['item_subtype']['name_id']}")
+    st.write(f"**Description** : {item.get('description', 'Aucune description disponible')}")
     
-    # Paramètres de la requête pour chercher la recette
-    params = {
-        "filter[item_ankama_id]": item_ankama_id  # Recherche par l'ID de l'item
-    }
-    
-    response = requests.get(url, params=params)
+    # Afficher l'image de l'item
+    st.image(item['image_urls']['icon'], width=100)
 
-    if response.status_code == 200:
-        recipes = response.json()  # Récupérer la réponse sous forme de JSON
-        
-        if recipes:
-            # Si des recettes sont trouvées, retourne le résumé
-            recipe = recipes[0]  # Prendre la première recette disponible
-            return {
-                "item_ankama_id": recipe["item_ankama_id"],  # L'ID de l'item fabriqué
-                "item_subtype": recipe["item_subtype"],      # Le sous-type de l'item (par exemple, "Équipement")
-                "quantity": recipe["quantity"]                # La quantité nécessaire pour fabriquer l'item
-            }
-        else:
-            return None  # Aucune recette trouvée pour cet item
+    # Si disponible, afficher la recette de l'item
+    recipe = get_recipe(item['ankama_id'])
+    if recipe:
+        st.write("Recette :")
+        for ingredient in recipe.get("result", {}).get("ingredients", []):
+            ingr = ingredient['item']
+            qty = ingredient['quantity']
+            st.markdown(f"- {qty} x {ingr['name']}")
+            st.image(ingr['image_urls']['icon'], width=80)
     else:
-        return None  # En cas d'erreur dans la requête
+        st.warning("Pas de recette disponible pour cet item.")
 
+# Fonction pour récupérer la recette d'un item
+def get_recipe(item_id):
+    search_url = f"https://api.dofusdu.de/dofus3/v1/fr/recipes/search?filter[item_ankama_id]={item_id}"
+    search_response = requests.get(search_url)
+
+    if search_response.status_code != 200:
+        st.error(f"Erreur recherche recette pour item {item_id} : {search_response.status_code}")
+        return None
+
+    recipes = search_response.json()
+
+    if not recipes:
+        st.warning(f"Aucune recette trouvée pour cet item.")
+        return None
+
+    return recipes[0]
+
+# Si une recherche est effectuée
 if search_query:
     items = search_items(search_query)
 
     st.subheader("📝 Résultats de recherche")
     for item in items:
         with st.expander(f"{item['name']} (Lvl {item['level']})"):
-            st.image(item['image_urls']['icon'], width=100)
-
-            # Affichage du résumé de la recette
-            recipe_summary = get_recipe_summary(item['ankama_id'])
-            if recipe_summary:
-                st.write(f"Item à fabriquer : {recipe_summary['item_subtype']}")
-                st.write(f"Quantité nécessaire : {recipe_summary['quantity']}")
-                st.write(f"ID de l'item fabriqué : {recipe_summary['item_ankama_id']}")
-            else:
-                st.warning("Aucune recette disponible pour cet item !")
+            display_item_details(item)
