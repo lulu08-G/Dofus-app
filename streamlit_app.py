@@ -23,8 +23,8 @@ def search_items(query):
         return []
 
 def get_recipe(item_id):
-    # 1. Search for recipe id
-    search_url = f"https://api.dofusdu.de/dofus3/v1/fr/recipes/search?filter[item.id]={item_id}"
+    # 1. Search for recipe id (correction de l'URL)
+    search_url = f"https://api.dofusdu.de/dofus3/v1/fr/recipes/search?filter[item]={item_id}"
     search_response = requests.get(search_url)
 
     if search_response.status_code != 200:
