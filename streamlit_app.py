@@ -6,6 +6,7 @@ st.title("🔨 Craft Dofus 🔨")
 search_query = st.text_input("Recherche d'un item :", "")
 
 def search_items(query):
+    """Rechercher des items par nom."""
     if not query:
         return []
     
@@ -23,8 +24,10 @@ def search_items(query):
         return []
 
 def get_recipe(item_id):
-    # 1. Search for recipe id (correction de l'URL)
-    search_url = f"https://api.dofusdu.de/dofus3/v1/fr/recipes/search?filter[item]={item_id}"
+    """Récupérer la recette d'un item par son ID."""
+    # URL pour rechercher des recettes avec un item spécifique
+    search_url = f"https://api.dofusdu.de/dofus3/v1/fr/recipes/search?filter%5Bitem_ankama_id%5D={item_id}"
+    
     search_response = requests.get(search_url)
 
     if search_response.status_code != 200:
@@ -37,17 +40,7 @@ def get_recipe(item_id):
         st.warning(f"Aucune recette trouvée pour cet item.")
         return None
 
-    recipe_id = recipes[0]['id']
-
-    # 2. Get recipe details
-    recipe_url = f"https://api.dofusdu.de/dofus3/v1/fr/recipes/{recipe_id}"
-    recipe_response = requests.get(recipe_url)
-
-    if recipe_response.status_code != 200:
-        st.error(f"Erreur récupération de la recette {recipe_id} : {recipe_response.status_code}")
-        return None
-
-    return recipe_response.json()
+    return recipes
 
 if search_query:
     items = search_items(search_query)
@@ -58,16 +51,22 @@ if search_query:
             st.image(item['image_urls']['icon'], width=100)
 
             if st.button(f"Voir la recette de {item['name']}", key=item['ankama_id']):
+                # Appeler la fonction pour obtenir la recette
                 recipe = get_recipe(item['ankama_id'])
 
-                if recipe and "ingredients" in recipe.get('result', {}):
+                if recipe:
                     st.success(f"Recette pour {item['name']}")
 
-                    for ingredient in recipe['result']['ingredients']:
-                        ingr = ingredient['item']
-                        qty = ingredient['quantity']
+                    # Afficher la recette sous forme d'ingrédients et quantités
+                    for r in recipe:
+                        if 'result' in r and 'ingredients' in r['result']:
+                            for ingredient in r['result']['ingredients']:
+                                ingr = ingredient['item']
+                                qty = ingredient['quantity']
 
-                        st.markdown(f"### {qty} x {ingr['name']}")
-                        st.image(ingr['image_urls']['icon'], width=80)
+                                st.markdown(f"### {qty} x {ingr['name']}")
+                                st.image(ingr['image_urls']['icon'], width=80)
+                        else:
+                            st.warning("Pas de recette disponible pour cet item !")
                 else:
                     st.warning("Pas de recette disponible pour cet item !")
