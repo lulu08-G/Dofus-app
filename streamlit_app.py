@@ -1,74 +1,36 @@
 import streamlit as st
-import requests
+from dofapi import DofusAPI
 
-st.title("🔨 Craft Dofus 🔨")
+# Initialise l'API
+api = DofusAPI()
+
+st.title("🔎 Encyclopédie Dofus (via dofapi)")
 
 search_query = st.text_input("Recherche d'un item :", "")
 
-# Fonction pour rechercher des items
-def search_items(query):
-    if not query:
-        return []
-    
-    params = {
-        "query": query,
-        "limit": 5
-    }
-
-    url = "https://api.dofusdu.de/dofus3/v1/fr/items/search"
-    response = requests.get(url, params=params)
-
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return []
-
-# Affiche les détails complets d'un item
-def display_item_details(item):
-    st.subheader(f"Détails de l'item : {item['name']}")
-    st.write(f"**ID** : {item['ankama_id']}")
-    st.write(f"**Type** : {item['type']['name']}")
-    st.write(f"**Niveau** : {item['level']}")
-    st.write(f"**Sous-type d'item** : {item['item_subtype']['name_id']}")
-    st.write(f"**Description** : {item.get('description', 'Aucune description disponible')}")
-    
-    # Afficher l'image de l'item
-    st.image(item['image_urls']['icon'], width=100)
-
-    # Si disponible, afficher la recette de l'item
-    recipe = get_recipe(item['ankama_id'])
-    if recipe:
-        st.write("Recette :")
-        for ingredient in recipe.get("result", {}).get("ingredients", []):
-            ingr = ingredient['item']
-            qty = ingredient['quantity']
-            st.markdown(f"- {qty} x {ingr['name']}")
-            st.image(ingr['image_urls']['icon'], width=80)
-    else:
-        st.warning("Pas de recette disponible pour cet item.")
-
-# Fonction pour récupérer la recette d'un item
-def get_recipe(item_id):
-    search_url = f"https://api.dofusdu.de/dofus3/v1/fr/recipes/search?filter[item_ankama_id]={item_id}"
-    search_response = requests.get(search_url)
-
-    if search_response.status_code != 200:
-        st.error(f"Erreur recherche recette pour item {item_id} : {search_response.status_code}")
-        return None
-
-    recipes = search_response.json()
-
-    if not recipes:
-        st.warning(f"Aucune recette trouvée pour cet item.")
-        return None
-
-    return recipes[0]
-
-# Si une recherche est effectuée
+# Si on tape quelque chose
 if search_query:
-    items = search_items(search_query)
+    # On cherche des items par le nom
+    items = api.items.search(query=search_query, lang='fr')
 
-    st.subheader("📝 Résultats de recherche")
-    for item in items:
-        with st.expander(f"{item['name']} (Lvl {item['level']})"):
-            display_item_details(item)
+    # Vérif si on trouve quelque chose
+    if not items:
+        st.warning("Aucun item trouvé !")
+    else:
+        # Boucle sur chaque item trouvé
+        for item in items:
+            st.subheader(f"{item['name']} (Lvl {item['level']})")
+            st.image(item['image_urls']['icon'], width=100)
+
+            # Affiche les infos de base
+            st.markdown(f"**ID** : {item['ankama_id']}")
+            st.markdown(f"**Type** : {item['type']['name']}")
+            st.markdown(f"**Niveau** : {item['level']}")
+            st.markdown(f"**Sous-type** : {item['item_subtype']['name_id']}")
+            st.markdown(f"**Lien vers l'image HD** : {item['image_urls']['sd']}")
+            
+            # Tu peux afficher plus d'infos si dispo
+            st.json(item)  # Affiche tout l'objet brut
+
+            # TODO : Si la lib expose la recette, on pourrait ajouter ici
+            # ex: recipe = api.recipes.get_by_item_id(item['ankama_id'])
