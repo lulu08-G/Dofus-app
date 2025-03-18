@@ -18,20 +18,20 @@ def search_items(query):
     url = "https://api.dofusdu.de/dofus3/v1/fr/items/search"
     response = requests.get(url, params=params)
 
-    # Debug : voir ce que l'API répond
     st.write("Status code:", response.status_code)
     st.write("Response text:", response.text)
 
     if response.status_code == 200:
-        data = response.json()
-        return data.get("data", [])
+        data = response.json()   # ⚠️ c'est déjà une LISTE
+        st.write("Data JSON:", data)
+        return data
     else:
-        st.error("Erreur API : " + str(response.status_code))
+        st.error(f"Erreur API : {response.status_code}")
         return []
 
 if search_query:
     items = search_items(search_query)
     for item in items:
-        st.image(item['img'], width=100)
+        st.image(item['image_urls']['icon'], width=100)
         st.subheader(item['name'])
         st.write(f"Niveau : {item['level']}")
