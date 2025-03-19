@@ -47,7 +47,7 @@ def show_recipe(recipe):
         # (Optionnel) Récupérer plus d'infos sur l'item si tu veux aller plus loin !
 
 # Fonction pour afficher les effets de l'item
-def show_item_effects(effects):
+def show_effects(effects):
     if not effects:
         st.warning("❌ Pas d'effets pour cet item.")
         return
