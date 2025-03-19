@@ -28,28 +28,23 @@ def search_items(query):
         st.error(f"Erreur API : {response.status_code}")
         return []
 
-# Affiche la recette si elle existe
-def show_recipe(item_id):
-    # Utilisation de l'API pour obtenir la recette
-    recipe_url = f"https://api.dofusdu.de/dofus3/v1/fr/items/resources/search?filter[crafted_item.id]={item_id}"
-    response = requests.get(recipe_url)
+# Fonction pour afficher la recette de l'item
+def show_recipe(recipe):
+    if not recipe:
+        st.warning("❌ Pas de recette pour cet item.")
+        return
 
-    if response.status_code == 200:
-        data = response.json()
+    st.success("✅ Recette disponible !")
 
-        # Si des recettes sont trouvées
-        if data:
-            st.success("✅ Recette disponible !")
-            for item in data:
-                st.markdown(f"➡️ **{item['name']}** (x{item['quantity']})")
-                st.image(item['image_urls']['icon'], width=50)
-                st.markdown(f"**Type :** {item['type']['name']}")
-                st.markdown(f"**Description :** {item.get('description', 'Aucune description disponible.')}")
-        else:
-            st.warning("❌ Aucune recette trouvée pour cet item.")
-    else:
-        # Affiche l'erreur si la réponse API est mauvaise
-        st.error(f"Erreur API pour la recette : {response.status_code} - {response.text}")
+    for ingredient in recipe:
+        item_id = ingredient['item_ankama_id']
+        quantity = ingredient['quantity']
+        subtype = ingredient['item_subtype']
+
+        # Afficher les détails de chaque ingrédient
+        st.markdown(f"➡️ **{quantity}x** [Item ID : `{item_id}`] - Type : {subtype}")
+        
+        # (Optionnel) Récupérer plus d'infos sur l'item si tu veux aller plus loin !
 
 # Si une recherche est faite :
 if search_query:
@@ -74,12 +69,11 @@ if search_query:
                     st.markdown(f"**Description :** {item.get('description', 'Aucune description disponible.')}")
                     st.markdown(f"**Pods :** {item.get('pods', 'N/A')}")
 
-                # Si l'item a une recette, afficher la recette
+                # Affiche la recette si disponible
                 if 'recipe' in item and item['recipe']:
                     st.markdown("---")
                     st.markdown("### 🧪 Recette de craft :")
-                    show_recipe(item['ankama_id'])  # Passer l'ID de l'item pour récupérer la recette
+                    show_recipe(item['recipe'])
                 else:
                     st.info("Pas de recette disponible pour cet item.")
-
 
