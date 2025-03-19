@@ -6,24 +6,15 @@ st.title("🔨 Craft Dofus 🔨")
 
 # Recherche d'un item
 search_query = st.text_input("Recherche d'un équipement :", "")
-filter_min_level = st.number_input("Niveau minimum :", min_value=1, value=150)
-filter_max_level = st.number_input("Niveau maximum :", min_value=1, value=200)
-limit = st.number_input("Nombre maximum de résultats :", min_value=1, value=8)
-filter_type = st.text_input("Type d'équipement :", "")
 
-def search_items(query, min_level, max_level, limit, type_name):
+def search_items(query):
     if not query:
         return []
 
     params = {
         "query": query,
-        "limit": limit,
-        "filter[min_level]": min_level,
-        "filter[max_level]": max_level
+        "limit": 5
     }
-    
-    if type_name:
-        params["filter[type.name_id]"] = type_name
 
     url = "https://api.dofusdu.de/dofus3/v1/fr/items/equipment/search"
     response = requests.get(url, params=params)
@@ -58,6 +49,8 @@ def show_item_stats(item):
     st.subheader(f"📊 Statistiques de {item['name']}")
     stats = item.get('effects', [])
 
+    st.write("Données des statistiques :", stats)  # Affichage des données des statistiques pour le débogage
+
     if not stats:
         st.warning("Aucune statistique disponible pour cet item.")
         return
@@ -77,7 +70,7 @@ def show_item_stats(item):
 
 # Si une recherche est faite :
 if search_query:
-    items = search_items(search_query, filter_min_level, filter_max_level, limit, filter_type)
+    items = search_items(search_query)
 
     if not items:
         st.warning("Aucun résultat trouvé pour cette recherche.")
@@ -85,6 +78,7 @@ if search_query:
         st.subheader("📋 Résultats :")
         
         for item in items:
+            st.write("Données de l'item :", item)  # Affichage des données de l'item pour le débogage
             # Vérifier si l'item contient bien un nom et un niveau
             if 'name' in item and 'level' in item:
                 with st.expander(f"{item['name']} (Lvl {item['level']})"):
