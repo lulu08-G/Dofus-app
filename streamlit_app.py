@@ -21,7 +21,8 @@ def search_items(query, page=1):
         "page": page      # Pagination : numéro de la page
     }
 
-    url = "https://api.dofusdu.de/dofus3/v1/fr/items/equipment/all"
+    # Utilisation de l'endpoint /search au lieu de /all
+    url = "https://api.dofusdu.de/dofus3/v1/fr/items/equipment/search"
     response = requests.get(url, params=params)
 
     if response.status_code == 200:
@@ -132,4 +133,3 @@ if search_query:
 
         # Pagination
         PAGE = display_pagination(PAGE)
-
