@@ -35,9 +35,9 @@ def show_recipe(recipe):
 
     st.success("✅ Recette disponible !")
     for ingredient in recipe:
-        item_id = ingredient['item_ankama_id']
-        quantity = ingredient['quantity']
-        subtype = ingredient['item_subtype']
+        item_id = ingredient.get('item_ankama_id', 'N/A')
+        quantity = ingredient.get('quantity', 'N/A')
+        subtype = ingredient.get('item_subtype', 'N/A')
 
         # Afficher les détails de chaque ingrédient
         st.markdown(f"➡️ **{quantity}x** [Item ID : `{item_id}`] - Type : {subtype}")
@@ -104,9 +104,7 @@ if search_query:
                     st.markdown(f"**Pods :** {item.get('pods', 'N/A')}")
                     st.markdown(f"**Conditions :** {item.get('conditions', 'Aucune condition disponible.')}")
                     st.markdown(f"**Equipement :** {item.get('is_weapon', 'N/A')}")
-                    st.markdown(f"**Critiques :** Probabilité critique: {item.get('critical_hit_probability', 'N/A')}%")
+                    st.markdown(f"**Critiques :** Probabilité critique : {item.get('critical_hit_probability', 'N/A')}%")
             else:
-                st.warning(f"L'item ne contient pas les informations attendues (manque 'name' ou 'level'). Voici les données complètes :")
+                st.warning("L'item ne contient pas les informations attendues (manque 'name' ou 'level'). Voici les données complètes :")
                 st.json(item)
-                    st.info("Aucune statistique disponible pour cet item.")
-
