@@ -59,7 +59,22 @@ def show_recipe(recipe):
         subtype = ingredient['item_subtype']  # Type d'ingrédient (facultatif, à afficher si besoin)
 
         # Utilisation de get_item_details pour récupérer les détails de l'item
-        item_details = get_item_details(item_id)
+       def get_item_details(ankama_id):
+    # Remplacer 'equipment' par 'resources' dans l'URL
+    url = f"https://api.dofusdu.de/dofus3/v1/fr/items/resources/{ankama_id}"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        try:
+            return response.json()  # Retourne les détails de l'item
+        except json.JSONDecodeError:
+            st.error("Erreur de formatage JSON : la réponse de l'API n'est pas un JSON valide.")
+            st.text(response.text)  # Afficher la réponse brute pour déboguer
+            return {}
+    else:
+        st.error(f"Erreur API : {response.status_code}")
+        return {}
+
 
         # Si on a bien récupéré les détails de l'item
         if item_details:
