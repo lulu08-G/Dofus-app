@@ -1,36 +1,64 @@
 import streamlit as st
-from dofapi import DofusAPI
+import requests
 
-# Initialise l'API
-api = DofusAPI()
+st.set_page_config(page_title="🔍 Recherche Items Dofus", layout="centered")
+st.title("🔍 Recherche d'équipements Dofus")
 
-st.title("🔎 Encyclopédie Dofus (via dofapi)")
+# Fonction de recherche d'items
+def search_items(query):
+    if not query:
+        return []
+    
+    params = {
+        "query": query,
+        "filter[type.name_id]": "equipment",  # Recherche uniquement les équipements
+        "limit": 10
+    }
 
-search_query = st.text_input("Recherche d'un item :", "")
+    url = "https://api.dofusdu.de/dofus3/v1/fr/items/search"
+    response = requests.get(url, params=params)
 
-# Si on tape quelque chose
-if search_query:
-    # On cherche des items par le nom
-    items = api.items.search(query=search_query, lang='fr')
-
-    # Vérif si on trouve quelque chose
-    if not items:
-        st.warning("Aucun item trouvé !")
+    if response.status_code == 200:
+        return response.json()
     else:
-        # Boucle sur chaque item trouvé
+        st.error(f"Erreur API : {response.status_code}")
+        return []
+
+# Fonction pour afficher les détails d'un item
+def show_item_details(item):
+    st.header(f"{item.get('name')} (Niveau {item.get('level')})")
+    st.image(item['image_urls']['icon'], width=150)
+
+    st.markdown("### Informations principales")
+    st.markdown(f"**ID Ankama** : {item.get('ankama_id')}")
+    st.markdown(f"**Type** : {item['type'].get('name')}")
+    st.markdown(f"**Sous-Type** : {item['item_subtype'].get('name_id')}")
+
+    st.markdown("### Description")
+    st.info(item.get('description', "Pas de description disponible."))
+
+    # Afficher les prix si disponibles
+    prices = item.get('prices')
+    if prices:
+        st.markdown("### Prix (HDV)")
+        for key, value in prices.items():
+            st.write(f"{key} : {value}")
+    else:
+        st.warning("Pas d'informations de prix disponibles.")
+
+# Input de recherche
+search_query = st.text_input("Tapez le nom de l'équipement recherché :", "")
+
+# Résultats de recherche
+if search_query:
+    items = search_items(search_query)
+
+    if items:
+        st.subheader("Résultats de recherche :")
+
+        # Liste cliquable des items
         for item in items:
-            st.subheader(f"{item['name']} (Lvl {item['level']})")
-            st.image(item['image_urls']['icon'], width=100)
-
-            # Affiche les infos de base
-            st.markdown(f"**ID** : {item['ankama_id']}")
-            st.markdown(f"**Type** : {item['type']['name']}")
-            st.markdown(f"**Niveau** : {item['level']}")
-            st.markdown(f"**Sous-type** : {item['item_subtype']['name_id']}")
-            st.markdown(f"**Lien vers l'image HD** : {item['image_urls']['sd']}")
-            
-            # Tu peux afficher plus d'infos si dispo
-            st.json(item)  # Affiche tout l'objet brut
-
-            # TODO : Si la lib expose la recette, on pourrait ajouter ici
-            # ex: recipe = api.recipes.get_by_item_id(item['ankama_id'])
+            if st.button(f"{item.get('name')} (Lvl {item.get('level')})", key=item.get('ankama_id')):
+                show_item_details(item)
+    else:
+        st.warning("Aucun résultat trouvé pour cette recherche.")
