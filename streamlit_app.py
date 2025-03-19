@@ -4,7 +4,9 @@ import requests
 st.set_page_config(page_title="🔍 Recherche Items Dofus", layout="centered")
 st.title("🔍 Recherche d'équipements Dofus")
 
-# Fonction de recherche d'items
+API_BASE_URL = "https://api.dofusdu.de/dofus3/v1/fr"
+
+# Fonction de recherche d'items équipements
 def search_items(query):
     if not query:
         return []
@@ -14,21 +16,27 @@ def search_items(query):
         "limit": 10
     }
 
-    url = "https://api.dofusdu.de/dofus3/v1/fr/items/search"
+    url = f"{API_BASE_URL}/items/equipments/search"
     response = requests.get(url, params=params)
 
     if response.status_code == 200:
         items = response.json()
-        
-        # On filtre uniquement les équipements côté Python
-        equipment_items = [
-            item for item in items if item['item_subtype']['name_id'] == "equipment"
-        ]
-        
-        return equipment_items
+        return items
     else:
         st.error(f"Erreur API : {response.status_code}")
         return []
+
+# Fonction pour récupérer les ressources de craft (hypothèse recette)
+def get_recipe_resources(item_id):
+    url = f"{API_BASE_URL}/items/resources/search?filter[crafted_item.id]={item_id}"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        resources = response.json()
+        return resources
+    else:
+        st.warning(f"Aucune ressource trouvée pour la recette de l'item {item_id} (code {response.status_code})")
+        return None
 
 # Fonction pour afficher les détails d'un item
 def show_item_details(item):
@@ -43,28 +51,30 @@ def show_item_details(item):
     st.markdown("### Description")
     st.info(item.get('description', "Pas de description disponible."))
 
-    # Afficher les prix si disponibles
-    prices = item.get('prices')
-    if prices:
-        st.markdown("### Prix (HDV)")
-        for key, value in prices.items():
-            st.write(f"{key} : {value}")
+    # Récupérer et afficher les ressources de craft
+    recipe_resources = get_recipe_resources(item['id'])  # ou item['ankama_id'] selon l'API
+
+    if recipe_resources:
+        st.subheader("🔨 Recette (Ressources nécessaires)")
+        for resource in recipe_resources:
+            st.markdown(f"- {resource.get('name')} (Niveau {resource.get('level')})")
+            st.image(resource['image_urls']['icon'], width=80)
     else:
-        st.warning("Pas d'informations de prix disponibles.")
+        st.warning("Aucune recette disponible pour cet item !")
 
-# Input de recherche
-search_query = st.text_input("Tape le nom de l'équipement recherché :", "")
+# ============================
+# MAIN
+# ============================
+search_query = st.text_input("Recherche d'un équipement :", "")
 
-# Résultats de recherche
 if search_query:
     items = search_items(search_query)
 
     if items:
-        st.subheader("Résultats de recherche :")
-
-        # Liste cliquable des items
+        st.subheader("📋 Résultats de recherche")
         for item in items:
-            if st.button(f"{item.get('name')} (Lvl {item.get('level')})", key=item.get('ankama_id')):
+            if st.button(f"{item['name']} (Lvl {item['level']})", key=item['id']):
                 show_item_details(item)
     else:
-        st.warning("Aucun équipement trouvé pour cette recherche.")
+        st.info("Aucun résultat trouvé pour cette recherche.")
+
