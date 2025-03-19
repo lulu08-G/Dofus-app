@@ -4,13 +4,13 @@ import requests
 st.set_page_config(page_title="🔨 Craft Dofus 🔨", page_icon="⚒️")
 
 st.title("🔨 Craft Dofus 🔨")
-st.subheader("Recherche et Recettes d'Items (Ressources uniquement pour les recettes)")
+st.subheader("Recherche d'Items (Ressources & Équipements)")
 
 # Recherche utilisateur
-search_query = st.text_input("🔎 Recherche d'une ressource craftable :", "")
+search_query = st.text_input("🔎 Recherche d'un item (ressource ou équipement) :", "")
 
-# Fonction pour chercher des ressources
-def search_resources(query):
+# Fonction pour chercher des items (ressources + équipements)
+def search_items(query):
     if not query:
         return []
 
@@ -48,14 +48,14 @@ def show_recipe(recipe):
 
 # Si une recherche est faite :
 if search_query:
-    resources = search_resources(search_query)
+    items = search_items(search_query)
 
-    if not resources:
+    if not items:
         st.warning("Aucun résultat trouvé pour cette recherche.")
     else:
         st.subheader("📋 Résultats :")
         
-        for item in resources:
+        for item in items:
             with st.expander(f"{item['name']} (Lvl {item['level']})"):
                 col1, col2 = st.columns([1, 3])
 
@@ -76,6 +76,5 @@ if search_query:
                     show_recipe(item['recipe'])
                 else:
                     st.info("Pas de recette disponible pour cet item.")
-
 
 
