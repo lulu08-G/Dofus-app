@@ -2,10 +2,10 @@ import streamlit as st
 import requests
 import json
 
-st.title("🔨 Craft Dofus 🔨")
+st.title("🔨 Recherche d'Equipement Dofus 🔨")
 
 # Recherche d'un item
-search_query = st.text_input("Recherche d'un équipement :", "")
+search_query = st.text_input("Entrez le nom d'un équipement à rechercher :", "")
 
 # Nombre d'items à afficher par recherche
 LIMIT = 10
@@ -21,27 +21,23 @@ def search_items(query, page=1):
         "page": page      # Pagination : numéro de la page
     }
 
-    # Utilisation de l'endpoint /search au lieu de /all
+    # Utilisation de l'endpoint /search pour la recherche d'items
     url = "https://api.dofusdu.de/dofus3/v1/fr/items/equipment/search"
     response = requests.get(url, params=params)
 
     if response.status_code == 200:
         try:
-            # Vérifier si la réponse est en format JSON
             response_data = response.json()
             if 'items' in response_data:
                 return response_data['items']
             else:
                 st.error("Aucun item trouvé dans la réponse de l'API.")
-                st.text(response.text)  # Afficher la réponse brute pour déboguer
                 return []
         except json.JSONDecodeError:
             st.error("Erreur de formatage JSON : la réponse de l'API n'est pas un JSON valide.")
-            st.text(response.text)  # Afficher la réponse brute pour déboguer
             return []
     else:
         st.error(f"Erreur API : {response.status_code}")
-        st.text(response.text)  # Afficher la réponse brute pour déboguer
         return []
 
 def show_recipe(recipe):
@@ -54,12 +50,14 @@ def show_recipe(recipe):
         item_id = ingredient['item_ankama_id']
         quantity = ingredient['quantity']
         subtype = ingredient['item_subtype']
-
-        # Afficher les détails de chaque ingrédient
+        # Afficher l'ingredient avec son image
         st.markdown(f"➡️ **{quantity}x** [Item ID : `{item_id}`] - Type : {subtype}")
+        
+        # Ajouter un lien ou une image pour chaque ingrédient
+        item_url = f"https://api.dofusdu.de/dofus3/v1/img/item/{item_id}-64.png"
+        st.image(item_url, width=50)
 
 def show_item_stats(item):
-    # Affichage des statistiques de l'item
     st.subheader(f"📊 Statistiques de {item['name']}")
     stats = item.get('effects', [])
 
@@ -80,7 +78,6 @@ def show_item_stats(item):
     if data:
         st.table(data)
 
-# Gestion de la pagination
 def display_pagination(page):
     col1, col2, col3 = st.columns([1, 1, 1])
     with col1:
@@ -112,7 +109,7 @@ if search_query:
                     col1, col2 = st.columns([1, 3])
 
                     with col1:
-                        st.image(item['image_urls']['icon'], width=80)
+                        st.image(item['image_urls']['icon'], width=100)
 
                     with col2:
                         st.markdown(f"**Nom :** {item['name']}")
@@ -140,3 +137,4 @@ if search_query:
 
         # Pagination
         PAGE = display_pagination(PAGE)
+
