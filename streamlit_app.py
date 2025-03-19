@@ -7,13 +7,16 @@ st.title("🔨 Craft Dofus 🔨")
 # Recherche d'un item
 search_query = st.text_input("Recherche d'un équipement :", "")
 
+# Nombre d'items à afficher par recherche
+LIMIT = 10
+
 def search_items(query):
     if not query:
         return []
 
     params = {
         "query": query,
-        "limit": 5
+        "limit": LIMIT  # Limiter le nombre d'items renvoyés pour éviter une surcharge
     }
 
     url = "https://api.dofusdu.de/dofus3/v1/fr/items/equipment/all"
@@ -21,7 +24,8 @@ def search_items(query):
 
     if response.status_code == 200:
         try:
-            return response.json()['items']  # Extraire les items de la réponse JSON
+            # Vérifier si l'API renvoie bien les items
+            return response.json().get('items', [])
         except json.JSONDecodeError:
             st.error("Erreur de formatage JSON : la réponse de l'API n'est pas un JSON valide.")
             st.text(response.text)  # Afficher la réponse brute pour déboguer
