@@ -4,12 +4,12 @@ import requests
 st.set_page_config(page_title="🔨 Craft Dofus 🔨", page_icon="⚒️")
 
 st.title("🔨 Craft Dofus 🔨")
-st.subheader("Recherche d'Items (Ressources & Équipements)")
+st.subheader("Recherche d'Equipements")
 
 # Recherche utilisateur
-search_query = st.text_input("🔎 Recherche d'un item (ressource ou équipement) :", "")
+search_query = st.text_input("🔎 Recherche d'un équipement :", "")
 
-# Fonction pour chercher des items (ressources + équipements)
+# Fonction pour chercher des équipements
 def search_items(query):
     if not query:
         return []
@@ -19,7 +19,7 @@ def search_items(query):
         "limit": 10  # Tu peux augmenter si besoin
     }
 
-    url = "https://api.dofusdu.de/dofus3/v1/fr/items/search"
+    url = "https://api.dofusdu.de/dofus3/v1/fr/items/equipment/search"
     response = requests.get(url, params=params)
 
     if response.status_code == 200:
@@ -81,3 +81,4 @@ if search_query:
                     show_recipe(item['ankama_id'])  # Passer l'ID de l'item pour récupérer la recette
                 else:
                     st.info("Pas de recette disponible pour cet item.")
+
