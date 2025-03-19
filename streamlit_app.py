@@ -11,7 +11,6 @@ def search_items(query):
     
     params = {
         "query": query,
-        "filter[type.name_id]": "equipment",  # Recherche uniquement les équipements
         "limit": 10
     }
 
@@ -19,7 +18,14 @@ def search_items(query):
     response = requests.get(url, params=params)
 
     if response.status_code == 200:
-        return response.json()
+        items = response.json()
+        
+        # On filtre uniquement les équipements côté Python
+        equipment_items = [
+            item for item in items if item['item_subtype']['name_id'] == "equipment"
+        ]
+        
+        return equipment_items
     else:
         st.error(f"Erreur API : {response.status_code}")
         return []
@@ -47,7 +53,7 @@ def show_item_details(item):
         st.warning("Pas d'informations de prix disponibles.")
 
 # Input de recherche
-search_query = st.text_input("Tapez le nom de l'équipement recherché :", "")
+search_query = st.text_input("Tape le nom de l'équipement recherché :", "")
 
 # Résultats de recherche
 if search_query:
@@ -61,4 +67,4 @@ if search_query:
             if st.button(f"{item.get('name')} (Lvl {item.get('level')})", key=item.get('ankama_id')):
                 show_item_details(item)
     else:
-        st.warning("Aucun résultat trouvé pour cette recherche.")
+        st.warning("Aucun équipement trouvé pour cette recherche.")
