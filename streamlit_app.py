@@ -28,6 +28,10 @@ def search_items(query, page=1):
     if response.status_code == 200:
         try:
             response_data = response.json()
+            # Affichage de la réponse brute pour le débogage
+            st.write("Réponse brute de l'API :")
+            st.json(response_data)
+
             if 'items' in response_data:
                 return response_data['items']
             else:
