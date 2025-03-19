@@ -51,6 +51,7 @@ def show_recipe(recipe):
         return
 
     st.success("✅ Recette disponible !")
+
     for ingredient in recipe:
         item_id = ingredient['item_ankama_id']
         quantity = ingredient['quantity']
@@ -58,6 +59,8 @@ def show_recipe(recipe):
 
         # Afficher les détails de chaque ingrédient
         st.markdown(f"➡️ **{quantity}x** [Item ID : `{item_id}`] - Type : {subtype}")
+        
+        # (Optionnel) Récupérer plus d'infos sur l'item si tu veux aller plus loin !
 
 def show_item_stats(item):
     # Affichage des statistiques de l'item
