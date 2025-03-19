@@ -16,12 +16,12 @@ def search_items(query):
         "limit": 5
     }
 
-    url = "https://api.dofusdu.de/dofus3/v1/fr/items/equipment/search"
+    url = "https://api.dofusdu.de/dofus3/v1/fr/items/equipment/all"
     response = requests.get(url, params=params)
 
     if response.status_code == 200:
         try:
-            return response.json()  # La réponse est directement une liste d'items
+            return response.json()['items']  # Extraire les items de la réponse JSON
         except json.JSONDecodeError:
             st.error("Erreur de formatage JSON : la réponse de l'API n'est pas un JSON valide.")
             st.text(response.text)  # Afficher la réponse brute pour déboguer
@@ -106,7 +106,7 @@ if search_query:
                     st.markdown(f"**Pods :** {item.get('pods', 'N/A')}")
                     st.markdown(f"**Conditions :** {item.get('conditions', 'Aucune condition disponible.')}")
                     st.markdown(f"**Equipement :** {item.get('is_weapon', 'N/A')}")
-                    st.markdown(f"**Critiques :** Probabilité critique : {item.get('critical_hit_probability', 'N/A')}%")
+                    st.markdown(f"**Critiques :** Probabilité critique: {item.get('critical_hit_probability', 'N/A')}%")
             else:
                 st.warning(f"L'item ne contient pas les informations attendues (manque 'name' ou 'level'). Voici les données complètes :")
                 st.json(item)
