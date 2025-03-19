@@ -2,6 +2,35 @@ import streamlit as st
 import requests
 import json
 
+st.set_page_config(page_title="🔨 Craft Dofus 🔨", page_icon="⚒️", layout="wide")
+st.markdown(
+    """
+    <style>
+        .main {
+            background-color: #fdf5e6;
+            color: #4a4a4a;
+        }
+        .stButton>button {
+            background-color: #ffcc00;
+            color: #4a4a4a;
+            border-radius: 5px;
+        }
+        .stTextInput>div>div>input {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .stDataFrame th {
+            background-color: #ffcc00;
+        }
+        .stDataFrame td {
+            background-color: #fff;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 st.title("🔨 Craft Dofus 🔨")
 
 # Recherche d'un item
@@ -52,12 +81,20 @@ def show_recipe(recipe):
 
     st.success("✅ Recette disponible !")
     for ingredient in recipe:
-        item_id = ingredient['item_ankama_id']
-        quantity = ingredient['quantity']
-        subtype = ingredient['item_subtype']
+        item_details = get_item_details(ingredient['item_ankama_id'])
+        item_name = item_details.get('name', 'Unknown')
+        item_image = item_details.get('image_urls', {}).get('icon', '')
 
-        # Afficher les détails de chaque ingrédient
-        st.markdown(f"➡️ **{quantity}x** [Item ID : `{item_id}`] - Type : {subtype}")
+        st.markdown(
+            f"""
+            <div style="display: flex; align-items: center;">
+                <span style="margin-right: 10px;">{ingredient['quantity']}x</span>
+                <img src="{item_image}" alt="{item_name}" width="30" style="margin-right: 10px;">
+                <span>{item_name}</span>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
 def show_item_stats(item):
     # Affichage des statistiques de l'item
