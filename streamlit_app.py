@@ -27,14 +27,21 @@ def search_items(query, page=1):
 
     if response.status_code == 200:
         try:
-            # Vérifier si l'API renvoie bien les items
-            return response.json().get('items', [])
+            # Vérifier si la réponse est en format JSON
+            response_data = response.json()
+            if 'items' in response_data:
+                return response_data['items']
+            else:
+                st.error("Aucun item trouvé dans la réponse de l'API.")
+                st.text(response.text)  # Afficher la réponse brute pour déboguer
+                return []
         except json.JSONDecodeError:
             st.error("Erreur de formatage JSON : la réponse de l'API n'est pas un JSON valide.")
             st.text(response.text)  # Afficher la réponse brute pour déboguer
             return []
     else:
         st.error(f"Erreur API : {response.status_code}")
+        st.text(response.text)  # Afficher la réponse brute pour déboguer
         return []
 
 def show_recipe(recipe):
