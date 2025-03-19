@@ -9,14 +9,16 @@ search_query = st.text_input("Recherche d'un équipement :", "")
 
 # Nombre d'items à afficher par recherche
 LIMIT = 10
+PAGE = 1
 
-def search_items(query):
+def search_items(query, page=1):
     if not query:
         return []
 
     params = {
-        "query": query,
-        "limit": LIMIT  # Limiter le nombre d'items renvoyés pour éviter une surcharge
+        "query": query,  # Mot-clé de recherche
+        "limit": LIMIT,   # Limiter le nombre d'items renvoyés
+        "page": page      # Pagination : numéro de la page
     }
 
     url = "https://api.dofusdu.de/dofus3/v1/fr/items/equipment/all"
@@ -70,9 +72,25 @@ def show_item_stats(item):
     if data:
         st.table(data)
 
+# Gestion de la pagination
+def display_pagination(page):
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col1:
+        if page > 1:
+            prev_page = page - 1
+            if st.button(f"Page {prev_page}"):
+                return prev_page
+    with col2:
+        st.markdown(f"**Page {page}**")
+    with col3:
+        next_page = page + 1
+        if st.button(f"Page {next_page}"):
+            return next_page
+    return page
+
 # Si une recherche est faite :
 if search_query:
-    items = search_items(search_query)
+    items = search_items(search_query, page=PAGE)
 
     if not items:
         st.warning("Aucun résultat trouvé pour cette recherche.")
@@ -111,7 +129,7 @@ if search_query:
                     st.markdown(f"**Conditions :** {item.get('conditions', 'Aucune condition disponible.')}")
                     st.markdown(f"**Equipement :** {item.get('is_weapon', 'N/A')}")
                     st.markdown(f"**Critiques :** Probabilité critique: {item.get('critical_hit_probability', 'N/A')}%")
-            else:
-                st.warning(f"L'item ne contient pas les informations attendues (manque 'name' ou 'level'). Voici les données complètes :")
-                st.json(item)
+
+        # Pagination
+        PAGE = display_pagination(PAGE)
 
