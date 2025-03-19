@@ -46,6 +46,28 @@ def show_recipe(recipe):
         
         # (Optionnel) Récupérer plus d'infos sur l'item si tu veux aller plus loin !
 
+# Fonction pour afficher les effets/dégâts de l'item
+def show_item_effects(effects):
+    if not effects:
+        st.warning("❌ Pas d'effets pour cet item.")
+        return
+
+    st.success("✅ Effets disponibles !")
+
+    # Créer un tableau pour afficher les dégâts ou effets
+    data = []
+    for effect in effects:
+        stat_type = effect['type']['name']
+        min_damage = effect.get('int_minimum', 'N/A')
+        max_damage = effect.get('int_maximum', 'N/A')
+        formatted = effect.get('formatted', 'Aucun format')
+
+        # Ajouter chaque effet sous forme de ligne
+        data.append([stat_type, min_damage, max_damage, formatted])
+
+    # Afficher sous forme de tableau
+    st.table(data)
+
 # Si une recherche est faite :
 if search_query:
     items = search_items(search_query)
@@ -76,4 +98,9 @@ if search_query:
                     show_recipe(item['recipe'])
                 else:
                     st.info("Pas de recette disponible pour cet item.")
-
+                
+                # Afficher les effets si disponibles
+                if 'effects' in item and item['effects']:
+                    st.markdown("---")
+                    st.markdown("### ⚡ Effets de l'item :")
+                    show_item_effects(item['effects'])
