@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+import json
 
 st.title("🔨 Craft Dofus 🔨")
 
@@ -9,7 +10,7 @@ search_query = st.text_input("Recherche d'un équipement :", "")
 def search_items(query):
     if not query:
         return []
-    
+
     params = {
         "query": query,
         "limit": 5
@@ -19,7 +20,12 @@ def search_items(query):
     response = requests.get(url, params=params)
 
     if response.status_code == 200:
-        return response.json()
+        try:
+            return response.json()  # Essayer de parser la réponse JSON
+        except json.JSONDecodeError:
+            st.error("Erreur de formatage JSON : la réponse de l'API n'est pas un JSON valide.")
+            st.text(response.text)  # Afficher la réponse brute pour déboguer
+            return []
     else:
         st.error(f"Erreur API : {response.status_code}")
         return []
@@ -37,14 +43,12 @@ def show_recipe(recipe):
 
         # Afficher les détails de chaque ingrédient
         st.markdown(f"➡️ **{quantity}x** [Item ID : `{item_id}`] - Type : {subtype}")
-        
-        # Optionnel: Ajouter plus d'infos sur chaque ingrédient
 
 def show_item_stats(item):
     # Affichage des statistiques de l'item
     st.subheader(f"📊 Statistiques de {item['name']}")
     stats = item.get('effects', [])
-    
+
     if not stats:
         st.warning("Aucune statistique disponible pour cet item.")
         return
@@ -72,6 +76,9 @@ if search_query:
         st.subheader("📋 Résultats :")
         
         for item in items:
+            # Afficher les données complètes de l'item pour aider au débogage
+            st.json(item)
+
             # Vérification des données de l'item avant d'y accéder
             if 'name' in item and 'level' in item:
                 with st.expander(f"{item['name']} (Lvl {item['level']})"):
@@ -106,3 +113,4 @@ if search_query:
             else:
                 st.warning(f"L'item ne contient pas les informations attendues (manque 'name' ou 'level'). Voici les données complètes :")
                 st.json(item)
+
