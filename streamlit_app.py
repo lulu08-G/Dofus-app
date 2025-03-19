@@ -1,29 +1,31 @@
 import streamlit as st
 import requests
-
-st.set_page_config(page_title="🔨 Craft Dofus 🔨", page_icon="⚒️")
+import json
 
 st.title("🔨 Craft Dofus 🔨")
-st.subheader("Recherche d'Equipements")
 
-# Recherche utilisateur
-search_query = st.text_input("🔎 Recherche d'un équipement :", "")
+# Recherche d'un item
+search_query = st.text_input("Recherche d'un équipement :", "")
 
-# Fonction pour chercher des équipements
 def search_items(query):
     if not query:
         return []
 
     params = {
         "query": query,
-        "limit": 10  # Tu peux augmenter si besoin
+        "limit": 5
     }
 
     url = "https://api.dofusdu.de/dofus3/v1/fr/items/equipment/search"
     response = requests.get(url, params=params)
 
     if response.status_code == 200:
-        return response.json()
+        try:
+            return response.json()['items']  # Extraire les items de la réponse JSON
+        except json.JSONDecodeError:
+            st.error("Erreur de formatage JSON : la réponse de l'API n'est pas un JSON valide.")
+            st.text(response.text)  # Afficher la réponse brute pour déboguer
+            return []
     else:
         st.error(f"Erreur API : {response.status_code}")
         return []
@@ -35,9 +37,9 @@ def show_recipe(recipe):
 
     st.success("✅ Recette disponible !")
     for ingredient in recipe:
-        item_id = ingredient.get('item_ankama_id', 'N/A')
-        quantity = ingredient.get('quantity', 'N/A')
-        subtype = ingredient.get('item_subtype', 'N/A')
+        item_id = ingredient['item_ankama_id']
+        quantity = ingredient['quantity']
+        subtype = ingredient['item_subtype']
 
         # Afficher les détails de chaque ingrédient
         st.markdown(f"➡️ **{quantity}x** [Item ID : `{item_id}`] - Type : {subtype}")
@@ -106,5 +108,5 @@ if search_query:
                     st.markdown(f"**Equipement :** {item.get('is_weapon', 'N/A')}")
                     st.markdown(f"**Critiques :** Probabilité critique : {item.get('critical_hit_probability', 'N/A')}%")
             else:
-                st.warning("L'item ne contient pas les informations attendues (manque 'name' ou 'level'). Voici les données complètes :")
+                st.warning(f"L'item ne contient pas les informations attendues (manque 'name' ou 'level'). Voici les données complètes :")
                 st.json(item)
