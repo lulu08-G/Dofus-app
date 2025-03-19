@@ -104,5 +104,5 @@ if search_query:
                     st.markdown(f"**Equipement :** {item.get('is_weapon', 'N/A')}")
                     st.markdown(f"**Critiques :** Probabilité critique: {item.get('critical_hit_probability', 'N/A')}%")
             else:
-                st.warning(f"L'item {item} semble manquer d'une clé 'name' ou 'level'.")
-
+                st.warning(f"L'item ne contient pas les informations attendues (manque 'name' ou 'level'). Voici les données complètes :")
+                st.json(item)
