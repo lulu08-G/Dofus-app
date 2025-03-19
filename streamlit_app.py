@@ -46,7 +46,7 @@ def show_recipe(recipe):
         
         # (Optionnel) Récupérer plus d'infos sur l'item si tu veux aller plus loin !
 
-# Fonction pour afficher les effets/dégâts de l'item
+# Fonction pour afficher les effets de l'item
 def show_item_effects(effects):
     if not effects:
         st.warning("❌ Pas d'effets pour cet item.")
@@ -98,9 +98,10 @@ if search_query:
                     show_recipe(item['recipe'])
                 else:
                     st.info("Pas de recette disponible pour cet item.")
-                
+
                 # Afficher les effets si disponibles
                 if 'effects' in item and item['effects']:
                     st.markdown("---")
                     st.markdown("### ⚡ Effets de l'item :")
                     show_item_effects(item['effects'])
+
