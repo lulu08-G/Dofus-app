@@ -46,27 +46,28 @@ def show_recipe(recipe):
         
         # (Optionnel) Récupérer plus d'infos sur l'item si tu veux aller plus loin !
 
-# Fonction pour afficher les effets de l'item
-def show_effects(effects):
-    if not effects:
-        st.warning("❌ Pas d'effets pour cet item.")
+# Fonction pour afficher les statistiques de l'item
+def show_item_stats(item):
+    # Affichage des statistiques de l'item
+    st.subheader(f"📊 Statistiques de {item['name']}")
+    stats = item.get('effects', [])
+
+    if not stats:
+        st.warning("Aucune statistique disponible pour cet item.")
         return
 
-    st.success("✅ Effets disponibles !")
-
-    # Créer un tableau pour afficher les dégâts ou effets
     data = []
-    for effect in effects:
-        stat_type = effect['type']['name']
-        min_damage = effect.get('int_minimum', 'N/A')
-        max_damage = effect.get('int_maximum', 'N/A')
-        formatted = effect.get('formatted', 'Aucun format')
+    for stat in stats:
+        stat_type = stat['type']['name']
+        min_value = stat.get('int_minimum', 'N/A')
+        max_value = stat.get('int_maximum', 'N/A')
+        formatted = stat.get('formatted', 'N/A')
 
-        # Ajouter chaque effet sous forme de ligne
-        data.append([stat_type, min_damage, max_damage, formatted])
+        data.append([stat_type, min_value, max_value, formatted])
 
-    # Afficher sous forme de tableau
-    st.table(data)
+    # Tableau des statistiques
+    if data:
+        st.table(data)
 
 # Si une recherche est faite :
 if search_query:
@@ -99,9 +100,7 @@ if search_query:
                 else:
                     st.info("Pas de recette disponible pour cet item.")
 
-                # Afficher les effets si disponibles
+                # Afficher les statistiques de l'item
                 if 'effects' in item and item['effects']:
                     st.markdown("---")
-                    st.markdown("### ⚡ Effets de l'item :")
-                    show_item_effects(item['effects'])
-
+                    show_item_stats(item)
