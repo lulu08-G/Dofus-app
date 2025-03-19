@@ -51,6 +51,9 @@ def show_item_stats(item):
     # Affichage des statistiques de l'item
     st.subheader(f"📊 Statistiques de {item['name']}")
     stats = item.get('effects', [])
+    
+    # Affichage de débogage pour voir ce que l'on récupère
+    st.write("Données de statistiques brutes :", stats)
 
     if not stats:
         st.warning("Aucune statistique disponible pour cet item.")
@@ -104,3 +107,6 @@ if search_query:
                 if 'effects' in item and item['effects']:
                     st.markdown("---")
                     show_item_stats(item)
+                else:
+                    st.info("Aucune statistique disponible pour cet item.")
+
