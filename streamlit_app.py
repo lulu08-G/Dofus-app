@@ -19,7 +19,7 @@ def search_resources(query):
         "limit": 10  # Tu peux augmenter si besoin
     }
 
-    url = "https://api.dofusdu.de/dofus3/v1/fr/items/resources/search"
+    url = "https://api.dofusdu.de/dofus3/v1/fr/items/search"
     response = requests.get(url, params=params)
 
     if response.status_code == 200:
