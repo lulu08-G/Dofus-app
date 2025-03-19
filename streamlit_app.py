@@ -6,22 +6,31 @@ st.title("🔨 Craft Dofus 🔨")
 
 # Recherche d'un item
 search_query = st.text_input("Recherche d'un équipement :", "")
+filter_min_level = st.number_input("Niveau minimum :", min_value=1, value=150)
+filter_max_level = st.number_input("Niveau maximum :", min_value=1, value=200)
+limit = st.number_input("Nombre maximum de résultats :", min_value=1, value=8)
+filter_type = st.text_input("Type d'équipement :", "")
 
-def search_items(query):
+def search_items(query, min_level, max_level, limit, type_name):
     if not query:
         return []
 
     params = {
         "query": query,
-        "limit": 5
+        "limit": limit,
+        "filter[min_level]": min_level,
+        "filter[max_level]": max_level
     }
+    
+    if type_name:
+        params["filter[type.name_id]"] = type_name
 
-    url = "https://api.dofusdu.de/dofus3/v1/fr/items/equipment"
+    url = "https://api.dofusdu.de/dofus3/v1/fr/items/equipment/search"
     response = requests.get(url, params=params)
 
     if response.status_code == 200:
         try:
-            return response.json()['items']  # Extraire les items de la réponse JSON
+            return response.json()  # La réponse est directement une liste d'items
         except json.JSONDecodeError:
             st.error("Erreur de formatage JSON : la réponse de l'API n'est pas un JSON valide.")
             st.text(response.text)  # Afficher la réponse brute pour déboguer
@@ -68,7 +77,7 @@ def show_item_stats(item):
 
 # Si une recherche est faite :
 if search_query:
-    items = search_items(search_query)
+    items = search_items(search_query, filter_min_level, filter_max_level, limit, filter_type)
 
     if not items:
         st.warning("Aucun résultat trouvé pour cette recherche.")
@@ -106,7 +115,7 @@ if search_query:
                     st.markdown(f"**Pods :** {item.get('pods', 'N/A')}")
                     st.markdown(f"**Conditions :** {item.get('conditions', 'Aucune condition disponible.')}")
                     st.markdown(f"**Equipement :** {item.get('is_weapon', 'N/A')}")
-                    st.markdown(f"**Critiques :** Probabilité critique: {item.get('critical_hit_probability', 'N/A')}%")
+                    st.markdown(f"**Critiques :** Probabilité critique : {item.get('critical_hit_probability', 'N/A')}%")
             else:
                 st.warning(f"L'item ne contient pas les informations attendues (manque 'name' ou 'level'). Voici les données complètes :")
                 st.json(item)
