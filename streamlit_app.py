@@ -40,7 +40,6 @@ def show_recipe(item_id):
         # Si des recettes sont trouvées
         if data:
             st.success("✅ Recette disponible !")
-
             for item in data:
                 st.markdown(f"➡️ **{item['name']}** (x{item['quantity']})")
                 st.image(item['image_urls']['icon'], width=50)
@@ -49,7 +48,8 @@ def show_recipe(item_id):
         else:
             st.warning("❌ Aucune recette trouvée pour cet item.")
     else:
-        st.error(f"Erreur API pour la recette : {response.status_code}")
+        # Affiche l'erreur si la réponse API est mauvaise
+        st.error(f"Erreur API pour la recette : {response.status_code} - {response.text}")
 
 # Si une recherche est faite :
 if search_query:
@@ -81,4 +81,5 @@ if search_query:
                     show_recipe(item['ankama_id'])  # Passer l'ID de l'item pour récupérer la recette
                 else:
                     st.info("Pas de recette disponible pour cet item.")
+
 
