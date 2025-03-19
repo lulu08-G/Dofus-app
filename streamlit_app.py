@@ -21,13 +21,7 @@ def search_items(query):
 
     if response.status_code == 200:
         try:
-            data = response.json()
-            if 'items' in data:
-                return data['items']  # Extraire les items de la réponse JSON
-            else:
-                st.error("La réponse de l'API ne contient pas de clé 'items'.")
-                st.json(data)  # Afficher la réponse pour déboguer
-                return []
+            return response.json()  # La réponse est directement une liste d'items
         except json.JSONDecodeError:
             st.error("Erreur de formatage JSON : la réponse de l'API n'est pas un JSON valide.")
             st.text(response.text)  # Afficher la réponse brute pour déboguer
