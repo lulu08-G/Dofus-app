@@ -28,14 +28,12 @@ def search_items(query):
         st.error(f"Erreur API : {response.status_code}")
         return []
 
-# Fonction pour afficher la recette de l'item
 def show_recipe(recipe):
     if not recipe:
         st.warning("❌ Pas de recette pour cet item.")
         return
 
     st.success("✅ Recette disponible !")
-
     for ingredient in recipe:
         item_id = ingredient['item_ankama_id']
         quantity = ingredient['quantity']
@@ -43,17 +41,11 @@ def show_recipe(recipe):
 
         # Afficher les détails de chaque ingrédient
         st.markdown(f"➡️ **{quantity}x** [Item ID : `{item_id}`] - Type : {subtype}")
-        
-        # (Optionnel) Récupérer plus d'infos sur l'item si tu veux aller plus loin !
 
-# Fonction pour afficher les statistiques de l'item
 def show_item_stats(item):
     # Affichage des statistiques de l'item
     st.subheader(f"📊 Statistiques de {item['name']}")
     stats = item.get('effects', [])
-    
-    # Affichage de débogage pour voir ce que l'on récupère
-    st.write("Données de statistiques brutes :", stats)
 
     if not stats:
         st.warning("Aucune statistique disponible pour cet item.")
@@ -82,31 +74,39 @@ if search_query:
         st.subheader("📋 Résultats :")
         
         for item in items:
-            with st.expander(f"{item['name']} (Lvl {item['level']})"):
-                col1, col2 = st.columns([1, 3])
+            # Vérifier si l'item contient bien un nom et un niveau
+            if 'name' in item and 'level' in item:
+                with st.expander(f"{item['name']} (Lvl {item['level']})"):
+                    col1, col2 = st.columns([1, 3])
 
-                with col1:
-                    st.image(item['image_urls']['icon'], width=80)
+                    with col1:
+                        st.image(item['image_urls']['icon'], width=80)
 
-                with col2:
-                    st.markdown(f"**Nom :** {item['name']}")
-                    st.markdown(f"**Niveau :** {item['level']}")
-                    st.markdown(f"**Type :** {item['type']['name']}")
-                    st.markdown(f"**Description :** {item.get('description', 'Aucune description disponible.')}")
-                    st.markdown(f"**Pods :** {item.get('pods', 'N/A')}")
+                    with col2:
+                        st.markdown(f"**Nom :** {item['name']}")
+                        st.markdown(f"**Niveau :** {item['level']}")
+                        st.markdown(f"**Type :** {item['type']['name']}")
+                        st.markdown(f"**Description :** {item.get('description', 'Aucune description disponible.')}")
 
-                # Affiche la recette si disponible
-                if 'recipe' in item and item['recipe']:
-                    st.markdown("---")
-                    st.markdown("### 🧪 Recette de craft :")
-                    show_recipe(item['recipe'])
-                else:
-                    st.info("Pas de recette disponible pour cet item.")
-
-                # Afficher les statistiques de l'item
-                if 'effects' in item and item['effects']:
-                    st.markdown("---")
+                    # Afficher la recette si elle existe
+                    if 'recipe' in item and item['recipe']:
+                        st.markdown("---")
+                        st.markdown("### 🧪 Recette de craft :")
+                        show_recipe(item['recipe'])
+                    else:
+                        st.info("Pas de recette disponible pour cet item.")
+                
+                    # Afficher les statistiques
                     show_item_stats(item)
-                else:
+
+                    # Autres informations à afficher
+                    st.markdown("### Informations supplémentaires :")
+                    st.markdown(f"**Pods :** {item.get('pods', 'N/A')}")
+                    st.markdown(f"**Conditions :** {item.get('conditions', 'Aucune condition disponible.')}")
+                    st.markdown(f"**Equipement :** {item.get('is_weapon', 'N/A')}")
+                    st.markdown(f"**Critiques :** Probabilité critique: {item.get('critical_hit_probability', 'N/A')}%")
+            else:
+                st.warning(f"L'item ne contient pas les informations attendues (manque 'name' ou 'level'). Voici les données complètes :")
+                st.json(item)
                     st.info("Aucune statistique disponible pour cet item.")
 
