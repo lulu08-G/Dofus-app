@@ -2,11 +2,53 @@ import streamlit as st
 import requests
 import json
 
+# Configuration du thème sombre
+st.set_page_config(page_title="🔨 Craft Dofus 🔨", page_icon="⚒️", layout="wide")
+st.markdown(
+    """
+    <style>
+        body {
+            background-color: #121212;
+            color: #f5f5f5;
+        }
+        .css-1v3fvcr {
+            background-color: #212121;
+        }
+        .css-1gkfh0p {
+            background-color: #333333;
+        }
+        .stButton>button {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+        }
+        .stButton>button:hover {
+            background-color: #45a049;
+        }
+        .stMarkdown {
+            color: #f5f5f5;
+        }
+        .stExpanderHeader {
+            color: #f5f5f5;
+        }
+        .stTable th {
+            background-color: #2e2e2e;
+        }
+        .stTable td {
+            background-color: #333333;
+            color: #f5f5f5;
+        }
+    </style>
+    """, unsafe_allow_html=True
+)
+
+# Titre de la page
 st.title("🔨 Craft Dofus 🔨")
 
 # Recherche d'un item
 search_query = st.text_input("Recherche d'un équipement :", "")
 
+# Fonction pour rechercher des items
 def search_items(query):
     if not query:
         return []
@@ -30,6 +72,7 @@ def search_items(query):
         st.error(f"Erreur API : {response.status_code}")
         return []
 
+# Fonction pour obtenir les détails de l'item
 def get_item_details(ankama_id):
     url = f"https://api.dofusdu.de/dofus3/v1/fr/items/equipment/{ankama_id}"
     response = requests.get(url)
@@ -45,6 +88,7 @@ def get_item_details(ankama_id):
         st.error(f"Erreur API : {response.status_code}")
         return {}
 
+# Fonction pour afficher la recette
 def show_recipe(recipe):
     if not recipe:
         st.warning("❌ Pas de recette pour cet item.")
@@ -59,12 +103,10 @@ def show_recipe(recipe):
 
         # Afficher les détails de chaque ingrédient
         st.markdown(f"➡️ **{quantity}x** [Item ID : `{item_id}`] - Type : {subtype}")
-        
-        # (Optionnel) Récupérer plus d'infos sur l'item si tu veux aller plus loin !
 
+# Fonction pour afficher les statistiques de l'item
 def show_item_stats(item):
     # Affichage des statistiques de l'item
-    st.subheader(f"📊 Statistiques de {item['name']}")
     stats = item.get('effects', [])
 
     if not stats:
@@ -81,6 +123,7 @@ def show_item_stats(item):
         data.append([stat_type, min_value, max_value, formatted])
 
     # Tableau des statistiques
+    st.markdown("### 📊 Statistiques :")
     if data:
         st.table(data)
 
@@ -126,8 +169,8 @@ if search_query:
                     st.markdown("### Informations supplémentaires :")
                     st.markdown(f"**Pods :** {item_details.get('pods', 'N/A')}")
                     st.markdown(f"**Conditions :** {item_details.get('conditions', 'Aucune condition disponible.')}")
-                    st.markdown(f"**Equipement :** {item_details.get('is_weapon', 'N/A')}")
-                    st.markdown(f"**Critiques :** Probabilité critique : {item_details.get('critical_hit_probability', 'N/A')}%")
+
             else:
                 st.warning(f"L'item ne contient pas les informations attendues (manque 'name' ou 'level'). Voici les données complètes :")
                 st.json(item)
+
