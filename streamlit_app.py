@@ -21,7 +21,7 @@ def search_items(query):
 
     if response.status_code == 200:
         try:
-            return response.json()  # Essayer de parser la réponse JSON
+            return response.json()['items']  # Extraire les items de la réponse JSON
         except json.JSONDecodeError:
             st.error("Erreur de formatage JSON : la réponse de l'API n'est pas un JSON valide.")
             st.text(response.text)  # Afficher la réponse brute pour déboguer
@@ -76,10 +76,7 @@ if search_query:
         st.subheader("📋 Résultats :")
         
         for item in items:
-            # Afficher les données complètes de l'item pour aider au débogage
-            st.json(item)
-
-            # Vérification des données de l'item avant d'y accéder
+            # Vérifier si l'item contient bien un nom et un niveau
             if 'name' in item and 'level' in item:
                 with st.expander(f"{item['name']} (Lvl {item['level']})"):
                     col1, col2 = st.columns([1, 3])
