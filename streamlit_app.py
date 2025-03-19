@@ -16,7 +16,7 @@ def search_items(query):
         "limit": 5
     }
 
-    url = "https://api.dofusdu.de/dofus3/v1/fr/items/equipment/all"
+    url = "https://api.dofusdu.de/dofus3/v1/fr/items/equipment/search"
     response = requests.get(url, params=params)
 
     if response.status_code == 200:
