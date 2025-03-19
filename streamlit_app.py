@@ -85,16 +85,19 @@ def show_recipe(recipe):
         item_name = item_details.get('name', 'Unknown')
         item_image = item_details.get('image_urls', {}).get('icon', '')
 
-        st.markdown(
-            f"""
-            <div style="display: flex; align-items: center;">
-                <span style="margin-right: 10px;">{ingredient['quantity']}x</span>
-                <img src="{item_image}" alt="{item_name}" width="30" style="margin-right: 10px;">
-                <span>{item_name}</span>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+        if item_name == 'Unknown' and item_image == '':
+            st.warning(f"Impossible de récupérer les détails pour l'item avec ID {ingredient['item_ankama_id']}")
+        else:
+            st.markdown(
+                f"""
+                <div style="display: flex; align-items: center;">
+                    <span style="margin-right: 10px;">{ingredient['quantity']}x</span>
+                    <img src="{item_image}" alt="{item_name}" width="30" style="margin-right: 10px;">
+                    <span>{item_name}</span>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
 def show_item_stats(item):
     # Affichage des statistiques de l'item
