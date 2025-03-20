@@ -237,23 +237,23 @@ elif page == "Page test":
             st.error(f"Erreur API : {response.status_code}")
             return {}
 
-    def show_recipe(recipe):
-        if not recipe:
-            st.warning("❌ Pas de recette pour cet item.")
-            return
+   def show_recipe(recipe):
+    if not recipe:
+        st.warning("❌ Pas de recette pour cet item.")
+        return
 
-        st.success("✅ Recette disponible !")
+    st.success("✅ Recette disponible !")
 
     # ✅ Vérification pour éviter NameError
-        if not isinstance(recipe, list):
-            st.error("⚠️ Erreur : la recette n'est pas une liste valide.")
-            st.write(recipe)  # Debugging
-            return
+    if not isinstance(recipe, list):
+        st.error("⚠️ Erreur : la recette n'est pas une liste valide.")
+        st.write(recipe)  # Debugging
+        return
 
-        for ingredient in recipe:
-            item_id = ingredient.get('item_ankama_id')
-            quantity = ingredient.get('quantity')
-            subtype = ingredient.get('item_subtype')
+    for ingredient in recipe:
+        item_id = ingredient.get('item_ankama_id')
+        quantity = ingredient.get('quantity')
+        subtype = ingredient.get('item_subtype')
 
         # 🔎 Récupérer les détails de la ressource
         item_details = get_resource_details(item_id)  # Utilisation de get_resource_details avec item_id
