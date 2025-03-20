@@ -347,151 +347,151 @@ elif page == "Page test":
 
 
 # ========================
-# DESIGNE
+# PAGE DESIGNE
 # ========================
-elif page == "DESIGNE":
-    
-    
-  html_code = """  
-    # Titre de la page
-   <!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page avec CSS personnalisé</title>
-    <style>
-        :root {
-            --font-roboto: "Lato", Arial, sans-serif;
-            --font-roboto-medium: "Lato Bold", Arial, sans-serif;
-            --font-roboto-bold: "Lato Black", Arial, sans-serif;
-            --font-open-sans: "Open Sans Condensed Bold", Arial, sans-serif;
-            --font-xxl: 1.5rem;
-            --font-xl: 1.19rem;
-            --font-l: 1.065rem;
-            --font-m: .94rem;
-            --font-ms: .88rem;
-            --font-s: .815rem;
-            --font-xs: .8rem;
-            --line-height-xxl: 1.7rem;
-            --line-height-xl: 1.4rem;
-            --line-height-l: 1.2rem;
-            --line-height-m: 1.1rem;
-            --line-height-s: 1rem;
-            --line-height-xs: .9rem;
-            --color-rose: #fb7185;
-            --color-pink: #f472b6;
-            --bs-primary: rgb(74, 67, 59);
-            --bs-secondary: rgb(106, 168, 79);
-            --bs-danger: #d9534f;
-            --bs-light: #f8f9fa;
-            --bs-dark: #212529;
-            --bs-primary-text-emphasis: #1e1b18;
-            --bs-light-text-emphasis: #495057;
-            --bs-success-bg-subtle: #ddeccd;
-            --bs-warning-bg-subtle: #ebc600;
-        }
+if page == "DESIGNE":
+    st.title("Page avec CSS personnalisé")
 
-        body {
-            font-family: var(--font-roboto);
-            background-color: var(--bs-light);
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            color: var(--bs-dark-text-emphasis);
-        }
+    html_code = """
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Page avec CSS personnalisé</title>
+        <style>
+            :root {
+                --font-roboto: "Lato", Arial, sans-serif;
+                --font-roboto-medium: "Lato Bold", Arial, sans-serif;
+                --font-roboto-bold: "Lato Black", Arial, sans-serif;
+                --font-open-sans: "Open Sans Condensed Bold", Arial, sans-serif;
+                --font-xxl: 1.5rem;
+                --font-xl: 1.19rem;
+                --font-l: 1.065rem;
+                --font-m: .94rem;
+                --font-ms: .88rem;
+                --font-s: .815rem;
+                --font-xs: .8rem;
+                --line-height-xxl: 1.7rem;
+                --line-height-xl: 1.4rem;
+                --line-height-l: 1.2rem;
+                --line-height-m: 1.1rem;
+                --line-height-s: 1rem;
+                --line-height-xs: .9rem;
+                --color-rose: #fb7185;
+                --color-pink: #f472b6;
+                --bs-primary: rgb(74, 67, 59);
+                --bs-secondary: rgb(106, 168, 79);
+                --bs-danger: #d9534f;
+                --bs-light: #f8f9fa;
+                --bs-dark: #212529;
+                --bs-primary-text-emphasis: #1e1b18;
+                --bs-light-text-emphasis: #495057;
+                --bs-success-bg-subtle: #ddeccd;
+                --bs-warning-bg-subtle: #ebc600;
+            }
 
-        header {
-            background-color: var(--bs-primary);
-            color: white;
-            padding: var(--spacer-4) var(--spacer-8);
-            text-align: center;
-            font-size: var(--font-xl);
-        }
+            body {
+                font-family: var(--font-roboto);
+                background-color: var(--bs-light);
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                color: var(--bs-dark-text-emphasis);
+            }
 
-        nav {
-            background-color: var(--bs-secondary);
-            padding: var(--spacer-3) var(--spacer-6);
-            display: flex;
-            justify-content: center;
-        }
+            header {
+                background-color: var(--bs-primary);
+                color: white;
+                padding: 1rem;
+                text-align: center;
+                font-size: var(--font-xl);
+            }
 
-        nav a {
-            text-decoration: none;
-            color: white;
-            font-size: var(--font-m);
-            padding: var(--spacer-4);
-            transition: background-color 0.3s;
-        }
+            nav {
+                background-color: var(--bs-secondary);
+                padding: 0.5rem;
+                display: flex;
+                justify-content: center;
+            }
 
-        nav a:hover {
-            background-color: var(--bs-primary);
-        }
+            nav a {
+                text-decoration: none;
+                color: white;
+                font-size: var(--font-m);
+                padding: 0.5rem;
+                transition: background-color 0.3s;
+            }
 
-        .main-content {
-            padding: var(--spacer-8);
-            line-height: var(--line-height-xl);
-        }
+            nav a:hover {
+                background-color: var(--bs-primary);
+            }
 
-        .card {
-            background-color: var(--bs-light);
-            border: 1px solid var(--bs-gray-200);
-            padding: var(--spacer-4);
-            margin-bottom: var(--spacer-6);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
-        }
+            .main-content {
+                padding: 1rem;
+                line-height: var(--line-height-xl);
+            }
 
-        .card:hover {
-            transform: scale(1.05);
-        }
+            .card {
+                background-color: var(--bs-light);
+                border: 1px solid var(--bs-gray-200);
+                padding: 1rem;
+                margin-bottom: 1rem;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                transition: transform 0.2s;
+            }
 
-        footer {
-            background-color: var(--bs-primary);
-            color: white;
-            text-align: center;
-            padding: var(--spacer-4);
-            position: absolute;
-            width: 100%;
-            bottom: 0;
-        }
+            .card:hover {
+                transform: scale(1.05);
+            }
 
-    </style>
-</head>
-<body>
+            footer {
+                background-color: var(--bs-primary);
+                color: white;
+                text-align: center;
+                padding: 1rem;
+                position: fixed;
+                width: 100%;
+                bottom: 0;
+            }
+        </style>
+    </head>
+    <body>
 
-    <header>
-        <h1>Bienvenue sur ma page</h1>
-    </header>
+        <header>
+            <h1>Bienvenue sur ma page</h1>
+        </header>
 
-    <nav>
-        <a href="#">Accueil</a>
-        <a href="#">À propos</a>
-        <a href="#">Services</a>
-        <a href="#">Contact</a>
-    </nav>
+        <nav>
+            <a href="#">Accueil</a>
+            <a href="#">À propos</a>
+            <a href="#">Services</a>
+            <a href="#">Contact</a>
+        </nav>
 
-    <div class="main-content">
-        <div class="card">
-            <h2>Card 1</h2>
-            <p>Ceci est un exemple de carte avec un peu de contenu pour montrer l'effet d'ombre et de survol.</p>
+        <div class="main-content">
+            <div class="card">
+                <h2>Card 1</h2>
+                <p>Ceci est un exemple de carte avec un peu de contenu pour montrer l'effet d'ombre et de survol.</p>
+            </div>
+
+            <div class="card">
+                <h2>Card 2</h2>
+                <p>Une autre carte, toujours avec un effet de survol qui l'agrandit légèrement.</p>
+            </div>
+
+            <div class="card">
+                <h2>Card 3</h2>
+                <p>Encore une carte, avec un texte explicatif pour tester l'espacement et la mise en page.</p>
+            </div>
         </div>
 
-        <div class="card">
-            <h2>Card 2</h2>
-            <p>Une autre carte, toujours avec un effet de survol qui l'agrandit légèrement.</p>
-        </div>
+        <footer>
+            <p>&copy; 2025 Ma page avec style CSS personnalisé</p>
+        </footer>
 
-        <div class="card">
-            <h2>Card 3</h2>
-            <p>Encore une carte, avec un texte explicatif pour tester l'espacement et la mise en page.</p>
-        </div>
-    </div>
+    </body>
+    </html>
+    """
 
-    <footer>
-        <p>&copy; 2025 Ma page avec style CSS personnalisé</p>
-    </footer>
-
-</body>
-</html>
-"""
+    st.markdown(html_code, unsafe_allow_html=True)
