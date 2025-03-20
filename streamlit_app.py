@@ -270,7 +270,7 @@ elif page == "Page test":
 
             with cols[0]:
                 if image_url:
-                    st.image(image_url, width=50)
+                    st.image(image_url, width=50, use_column_width=True)
                 else:
                     st.write("❓")  # Icône manquante
 
