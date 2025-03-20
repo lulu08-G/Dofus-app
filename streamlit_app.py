@@ -226,12 +226,12 @@ elif page == "Page test":
 
 
             
-    def show_recipe(recipe):
-                if not recipe:
-                    st.warning("❌ Pas de recette pour cet item.")
-                    return
+     def show_recipe(recipe):
+        if not recipe:
+               st.warning("❌ Pas de recette pour cet item.")
+               return
 
-                    st.success("✅ Recette disponible !")
+              st.success("✅ Recette disponible !")
 
     for ingredient in recipe:
         item_id = ingredient.get('item_ankama_id')
@@ -239,20 +239,26 @@ elif page == "Page test":
         subtype = ingredient.get('item_subtype')
 
         # 🔎 Récupérer les détails de la ressource
-       @st.cache_data
-def get_resource_details(ankama_id):
-    url = f"https://api.dofusdu.de/dofus3/v1/fr/items/resources/{ankama_id}"
-    response = requests.get(url)
+        item_details = get_resource_details(item_id)
 
-    if response.status_code == 200:
-        try:
-            return response.json()
-        except json.JSONDecodeError:
-            st.error(f"Erreur JSON pour l'ID {ankama_id}")
-            return {}
-    else:
-        st.error(f"Erreur API {response.status_code} pour l'ID {ankama_id}")
-        return {}
+        if not item_details:
+            st.warning(f"❗ Détails introuvables pour l'ID {item_id}")
+            continue
+
+        item_name = item_details.get('name', 'Nom inconnu')
+        image_url = item_details.get('image_urls', {}).get('icon')
+
+        # 🖼️ Affichage en colonnes
+        cols = st.columns([1, 5])
+
+        with cols[0]:
+            if image_url:
+                st.image(image_url, width=50)
+            else:
+                st.write("❓")  # Icône manquante
+
+        with cols[1]:
+            st.markdown(f"**{quantity}x** {item_name} _(Type : {subtype})_")
 
 
 
