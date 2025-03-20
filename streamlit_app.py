@@ -304,6 +304,8 @@ elif page == "Page test":
                             st.markdown(f"**Type :** {item['type']['name']}")
                             st.markdown(f"**Description :** {item.get('description', 'Aucune description disponible.')}")
 
+                        # **PROBLÈME DE L'INDENTATION** :
+                        # Ligne suivante maintenant correctement indentée
                         item_details = get_item_details(item['ankama_id'])
 
                         if 'recipe' in item_details and item_details['recipe']:
@@ -324,26 +326,3 @@ elif page == "Page test":
                 else:
                     st.warning("Item incomplet :")
                     st.json(item)
-
-                        item_details = get_item_details(item['ankama_id'])
-
-                        if 'recipe' in item_details and item_details['recipe']:
-                            st.markdown("---")
-                            st.markdown("### 🧪 Recette de craft :")
-                            show_recipe(item_details['recipe'])
-                        else:
-                            st.info("Pas de recette disponible pour cet item.")
-
-                        show_item_stats(item_details)
-
-                        st.markdown("### Informations supplémentaires :")
-                        st.markdown(f"**Pods :** {item_details.get('pods', 'N/A')}")
-                        st.markdown(f"**Conditions :** {item_details.get('conditions', 'Aucune condition disponible.')}")
-                        st.markdown(f"**Equipement :** {item_details.get('is_weapon', 'N/A')}")
-                        st.markdown(f"**Critiques :** Probabilité critique : {item_details.get('critical_hit_probability', 'N/A')}%")
-
-                else:
-                    st.warning("Item incomplet :")
-                    st.json(item)
-
-
