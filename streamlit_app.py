@@ -210,7 +210,19 @@ elif page == "Page test":
     def get_item_details(ankama_id):
         url = f"https://api.dofusdu.de/dofus3/v1/fr/items/equipment/{ankama_id}"
         response = requests.get(url)
-    def get_resource_details(ankama_id):
+
+        if response.status_code == 200:
+            try:
+                return response.json()
+            except json.JSONDecodeError:
+                st.error("Erreur de formatage JSON : la réponse de l'API n'est pas un JSON valide.")
+                st.text(response.text)
+                return {}
+        else:
+            st.error(f"Erreur API : {response.status_code}")
+            return {}
+
+    def get_resource_details(item_id):  # Correction de l'argument ici : 'ankama_id' -> 'item_id'
         url = f"https://api.dofusdu.de/dofus3/v1/fr/items/resources/{item_id}"
         response = requests.get(url)
 
@@ -244,7 +256,7 @@ elif page == "Page test":
             subtype = ingredient.get('item_subtype')
 
             # 🔎 Récupérer les détails de la ressource
-            item_details = get_resource_details(item_id)  # Remplacer get_resource_details par get_item_details
+            item_details = get_resource_details(item_id)  # Utilisation de get_resource_details avec item_id
 
             if not item_details:
                 st.warning(f"❗ Détails introuvables pour l'ID {item_id}")
