@@ -76,6 +76,7 @@ def show_recipe(recipe):
         return {}
 
 
+
         # Si on a bien récupéré les détails de l'item
         if item_details:
             # On suppose que l'item a une clé 'name' et 'image_urls'
