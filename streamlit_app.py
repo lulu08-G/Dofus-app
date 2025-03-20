@@ -350,68 +350,83 @@ elif page == "Page test":
 # DESIGNE
 # ========================
 elif page == "DESIGNE":
-
-    st.title("🛠️ Dofusbook - Visualisation d'Équipement")
-
-    # Exemple d'équipement
-    equipment = {
-        "name": "Bâton de Craqueleur",
-        "level": 50,
-        "type": "Bâton",
-        "image_url": "https://www.dofus.com/fr/img/db-items/1295.png",  # Exemple d'image
-        "description": "Un bâton magique pour les utilisateurs expérimentés.",
-        "pods": 15,
-        "is_weapon": True,
-        "critical_hit_probability": 10,
-        "effects": [
-            {"type": {"name": "Force"}, "int_minimum": 10, "int_maximum": 20, "formatted": "10 à 20"},
-            {"type": {"name": "Vitalité"}, "int_minimum": 50, "int_maximum": 100, "formatted": "50 à 100"}
-        ],
-        "recipe": [
-            {"item_ankama_id": 7225, "quantity": 3, "item_subtype": "Ressource"},
-            {"item_ankama_id": 7856, "quantity": 2, "item_subtype": "Ressource"}
+    
+    
+    # Titre de la page
+    st.title("👑 Dofusbook - Équipement & Statistiques")
+    
+    # Ajouter une image en haut, représentant un équipement (ici une image d'équipement de Dofus par exemple)
+    st.image("https://www.dofusbook.net/img/logo.png", caption="Logo Dofusbook", width=200)
+    
+    # Description de la page
+    st.markdown("""
+    Bienvenue sur Dofusbook ! Découvrez vos équipements, vos statistiques et plus encore. 
+    Ici, vous pouvez consulter tous les équipements de Dofus avec leurs caractéristiques et leur utilisation dans le jeu.
+    """)
+    
+    # Création de l'expansion pour un équipement
+    with st.expander("Equipement 1 - Casque de l'Observateur (Lvl 200)"):
+        # Affichage d'un équipement avec son image et ses détails
+        col1, col2 = st.columns([1, 2])
+        
+        with col1:
+            st.image("https://www.dofusbook.net/images/equipements/equipement1.png", width=150)  # Image de l'équipement
+        with col2:
+            st.markdown("**Nom :** Casque de l'Observateur")
+            st.markdown("**Niveau :** 200")
+            st.markdown("**Type :** Casque")
+            st.markdown("**Pods :** 5")
+            st.markdown("**Description :** Un casque puissant utilisé par les observateurs du jeu.")
+    
+        # Ajouter les statistiques de l'équipement
+        st.subheader("Statistiques :")
+        stats = [
+            ("Puissance", "+50"),
+            ("Vitalité", "+100"),
+            ("Agilité", "+30"),
+            ("Force", "+40"),
+            ("Intelligence", "+25")
         ]
-    }
-
-    # Affichage des informations générales de l'équipement
-    col1, col2 = st.columns([1, 3])
-
-    with col1:
-        st.image(equipment['image_url'], width=150)
-
-    with col2:
-        st.markdown(f"### **Nom :** {equipment['name']}")
-        st.markdown(f"**Niveau :** {equipment['level']}")
-        st.markdown(f"**Type :** {equipment['type']}")
-        st.markdown(f"**Description :** {equipment['description']}")
-        st.markdown(f"**Pods :** {equipment['pods']}")
-        st.markdown(f"**Equipement :** {'Oui' if equipment['is_weapon'] else 'Non'}")
-        st.markdown(f"**Probabilité critique :** {equipment['critical_hit_probability']}%")
-
-    # Affichage des effets (statistiques)
-    st.subheader("📊 Statistiques")
-    data = []
-    for effect in equipment['effects']:
-        stat_type = effect['type']['name']
-        min_value = effect.get('int_minimum', 'N/A')
-        max_value = effect.get('int_maximum', 'N/A')
-        formatted = effect.get('formatted', 'N/A')
-
-        data.append([stat_type, min_value, max_value, formatted])
-
-    if data:
-        st.table(data)
-
-    # Affichage de la recette de craft
-    st.subheader("🧪 Recette de Craft")
-    if equipment['recipe']:
-        for ingredient in equipment['recipe']:
-            st.markdown(f"- **{ingredient['quantity']}x** Item ID : `{ingredient['item_ankama_id']}` - Type : {ingredient['item_subtype']}")
-    else:
-        st.info("Aucune recette de craft disponible pour cet équipement.")
-
-    # Exemple de mise en page inspirée de Dofusbook
+        st.table(stats)
+    
+    # Deuxième équipement
+    with st.expander("Equipement 2 - Amulette de l'Harmonie (Lvl 150)"):
+        col1, col2 = st.columns([1, 2])
+        
+        with col1:
+            st.image("https://www.dofusbook.net/images/equipements/equipement2.png", width=150)  # Image de l'équipement
+        with col2:
+            st.markdown("**Nom :** Amulette de l'Harmonie")
+            st.markdown("**Niveau :** 150")
+            st.markdown("**Type :** Amulette")
+            st.markdown("**Pods :** 3")
+            st.markdown("**Description :** Une amulette aux pouvoirs mystérieux, utile pour les mages.")
+    
+        # Ajouter les statistiques de l'équipement
+        st.subheader("Statistiques :")
+        stats = [
+            ("Puissance", "+40"),
+            ("Vitalité", "+80"),
+            ("Agilité", "+20"),
+            ("Sagesse", "+35")
+        ]
+        st.table(stats)
+    
+    # Ajouter des boutons ou autres sections
     st.markdown("---")
-    st.markdown("### Informations supplémentaires :")
-    st.markdown(f"**Critiques :** Probabilité critique : {equipment['critical_hit_probability']}%")
-
+    st.subheader("🔧 Autres outils")
+    
+    # Boutons pour des fonctionnalités additionnelles
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        if st.button("Comparer les équipements"):
+            st.write("Comparaison lancée...")
+    with col2:
+        if st.button("Voir les recettes de craft"):
+            st.write("Recettes de craft chargées...")
+    
+    # Footer avec des liens ou crédits
+    st.markdown("---")
+    st.markdown("Page créée à des fins de démonstration. Utilisez Dofusbook pour voir les vrais équipements.")
+    
+    
