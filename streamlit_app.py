@@ -223,31 +223,13 @@ elif page == "Page test":
 
 
 
-
-
-
-
-    
-    def show_recipe(recipe):
+            
+     def show_recipe(recipe):
         if not recipe:
             st.warning("❌ Pas de recette pour cet item.")
             return
 
-        st.success("✅ Recette disponible !")
-        for ingredient in recipe:
-            item_id = ingredient['item_ankama_id']
-            quantity = ingredient['quantity']
-            subtype = ingredient['item_subtype']
-
-            # Afficher les détails de chaque ingrédient
-            st.markdown(f"➡️ **{quantity}x** [Item ID : `{item_id}`] - Type : {subtype}")
-            
-     def show_recipe(recipe):
-    if not recipe:
-        st.warning("❌ Pas de recette pour cet item.")
-        return
-
-    st.success("✅ Recette disponible !")
+            st.success("✅ Recette disponible !")
 
     for ingredient in recipe:
         item_id = ingredient.get('item_ankama_id')
@@ -275,11 +257,6 @@ elif page == "Page test":
 
         with cols[1]:
             st.markdown(f"**{quantity}x** {item_name} _(Type : {subtype})_")
-
-
-
-
-
 
 
 
