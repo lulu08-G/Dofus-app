@@ -352,81 +352,116 @@ elif page == "Page test":
 elif page == "DESIGNE":
     
     
+    
     # Titre de la page
-    st.title("👑 Dofusbook - Équipement & Statistiques")
+    st.title("Bienvenue sur Dofusbook !")
     
-    # Ajouter une image en haut, représentant un équipement (ici une image d'équipement de Dofus par exemple)
-    st.image("https://www.dofusbook.net/img/logo.png", caption="Logo Dofusbook", width=200)
+    # HTML à intégrer
+    html_code = """
+    <!DOCTYPE html>
+    <html lang="fr">
+      <head>
+        <meta charset="utf-8">
+        <meta name="description" content="Dofusbook : un fan-site dédié au mmorpg Dofus, avec ses kamas, ses donjons, ses wabbits et ses tofus :)">
+        <meta name="keywords" content="dofus, dofusbook, kamas, mmorpg, wabbit, donjon, panoplie, tofu, bouftou, iop">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="msapplication-TileColor" content="#ffc40d">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="@dofus_book">
+        <meta name="twitter:title" content="Dofusbook, fan-site dédié à Dofus (♥‿♥)">
+        <meta name="twitter:description" content="Rejoins-nous sur Dofusbook, le site de référence sur l'univers de Dofus ! Simule tes équipements, partage les sur le Discord, améliore les grâce aux conseils de la communauté.">
+        <meta name="twitter:image" content="https://www.dofusbook.net/assets/img/ui/social.jpg">
+        <meta property="og:title" content="Dofusbook, fan-site dédié à Dofus (♥‿♥)">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://www.dofusbook.net">
+        <meta property="og:description" content="Rejoins-nous sur Dofusbook, le site de référence sur l'univers de Dofus ! Simule tes équipements, partage les sur le Discord, améliore les grâce aux conseils de la communauté.">
+        <meta property="og:image" content="https://www.dofusbook.net/assets/img/ui/social.jpg">
+        <title>Bienvenue sur Dofusbook !</title>
     
-    # Description de la page
-    st.markdown("""
-    Bienvenue sur Dofusbook ! Découvrez vos équipements, vos statistiques et plus encore. 
-    Ici, vous pouvez consulter tous les équipements de Dofus avec leurs caractéristiques et leur utilisation dans le jeu.
-    """)
+        <link rel="icon" href="/favicon.ico">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+        <link rel="manifest" href="/manifest.json">
+        <link rel="mask-icon" href="/assets/icons/safari-pinned-tab.svg" color="#555555">
+      </head>
     
-    # Création de l'expansion pour un équipement
-    with st.expander("Equipement 1 - Casque de l'Observateur (Lvl 200)"):
-        # Affichage d'un équipement avec son image et ses détails
-        col1, col2 = st.columns([1, 2])
-        
-        with col1:
-            st.image("https://www.dofusbook.net/images/equipements/equipement1.png", width=150)  # Image de l'équipement
-        with col2:
-            st.markdown("**Nom :** Casque de l'Observateur")
-            st.markdown("**Niveau :** 200")
-            st.markdown("**Type :** Casque")
-            st.markdown("**Pods :** 5")
-            st.markdown("**Description :** Un casque puissant utilisé par les observateurs du jeu.")
+      <body>
+        <div class="MainWrapper container">
+          <noscript>
+            <strong>We're sorry but front doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+          </noscript>
+          <div id="app"></div>
+          <!-- built files will be auto injected -->
+        </div>
     
-        # Ajouter les statistiques de l'équipement
-        st.subheader("Statistiques :")
-        stats = [
-            ("Puissance", "+50"),
-            ("Vitalité", "+100"),
-            ("Agilité", "+30"),
-            ("Force", "+40"),
-            ("Intelligence", "+25")
-        ]
-        st.table(stats)
+        <div class="Footer pb-6">
+          <div class="DecorRight">
+            <div class="DecorRight-img"></div>
+          </div>
     
-    # Deuxième équipement
-    with st.expander("Equipement 2 - Amulette de l'Harmonie (Lvl 150)"):
-        col1, col2 = st.columns([1, 2])
-        
-        with col1:
-            st.image("https://www.dofusbook.net/images/equipements/equipement2.png", width=150)  # Image de l'équipement
-        with col2:
-            st.markdown("**Nom :** Amulette de l'Harmonie")
-            st.markdown("**Niveau :** 150")
-            st.markdown("**Type :** Amulette")
-            st.markdown("**Pods :** 3")
-            st.markdown("**Description :** Une amulette aux pouvoirs mystérieux, utile pour les mages.")
+          <div class="container mx-auto px-4">
+              <div class="row md:ml-6 mb-3">
+                  <div class="col-sm-7 col-lg-5">
+                    <h4>Dofusbook</h4>
+                    <ul class="list-none pl-0">
+                      <li><a href="/fr/equipements">Mes équipements</a></li>
+                      <li><a href="/fr/outils/atelier">Mes crafts</a></li>
+                      <li><a href="/fr/outils/skinator/draft">Skinator</a></li>
+                      <li><a href="/fr/outils/cacminator">Cacminator</a></li>
+                      <li><a href="/fr/outils/stuffminator">Stuffminator</a></li>
+                    </ul>
+                  </div>
+                  <div class="col-sm-1 col-lg-1"></div>
+                  <div class="col-sm-7 col-lg-5">
+                    <h4>Communauté</h4>
+                    <ul class="list-none pl-0">
+                      <li><a href="https://discord.gg/VRzuGCnPKt">Notre Discord</a></li>
+                      <li><a href="https://www.facebook.com/DofusBookOfficiel/">Notre page Facebook</a></li>
+                      <li><a href="https://twitter.com/dofus_book">Notre Twitter</a></li>
+                      <li><a href="/fr/communaute/membres">Nos membres</a></li>
+                    </ul>
+                  </div>
+                  <div class="col-sm-1 col-lg-1"></div>
+                  <div class="col-sm-7 col-lg-5">
+                    <h4>Autres liens</h4>
+                    <ul class="list-none pl-0">
+                      <li><a href="/fr/cgu">Conditions d'utilisation</a></li>
+                      <li><a href="/fr/confidentialite">Politique de confidentialité</a></li>
+                      <li><a href="https://discord.gg/VRzuGCnPKt">Nous contacter</a></li>
+                      <li><a href="https://discord.gg/VRzuGCnPKt">Signaler un bug</a></li>
+                    </ul>
+                  </div>
+                  <div class="col-sm-24 col-lg-7 text-center">
+                    <img
+                      class="mt-8"
+                      src="/assets/img/ui/hotlink-ok/logo-mini.png"
+                      width="153"
+                      height="75"
+                      alt="Logo Dofusbook"
+                    >
+                    <div class="mt-4">Copyright © Dofusbook</div>
+                    <div>2009 - 2025</div>
+                    <hr class="text-white text-opacity-25 mx-8">
+                    <div class="mt-4 white">
+                      <a
+                        class="text-transform-none"
+                        href="https://www.flaticon.com"
+                        title="Freepik icons"
+                      >
+                        Some menu icons are created by Freepik - Flaticon
+                      </a>
+                    </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </body>
+    </html>
+    """
     
-        # Ajouter les statistiques de l'équipement
-        st.subheader("Statistiques :")
-        stats = [
-            ("Puissance", "+40"),
-            ("Vitalité", "+80"),
-            ("Agilité", "+20"),
-            ("Sagesse", "+35")
-        ]
-        st.table(stats)
-    
-    # Ajouter des boutons ou autres sections
-    st.markdown("---")
-    st.subheader("🔧 Autres outils")
-    
-    # Boutons pour des fonctionnalités additionnelles
-    col1, col2 = st.columns([1, 1])
-    with col1:
-        if st.button("Comparer les équipements"):
-            st.write("Comparaison lancée...")
-    with col2:
-        if st.button("Voir les recettes de craft"):
-            st.write("Recettes de craft chargées...")
-    
-    # Footer avec des liens ou crédits
-    st.markdown("---")
-    st.markdown("Page créée à des fins de démonstration. Utilisez Dofusbook pour voir les vrais équipements.")
-    
-    
+    # Affichage du code HTML dans Streamlit
+    st.markdown(html_code, unsafe_allow_html=True)
