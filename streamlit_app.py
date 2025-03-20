@@ -352,7 +352,7 @@ elif page == "Page test":
 elif page == "DESIGNE":
     
     
-    
+  html_code = """  
     # Titre de la page
    <!DOCTYPE html>
 <html lang="fr">
@@ -494,3 +494,4 @@ elif page == "DESIGNE":
 
 </body>
 </html>
+"""
