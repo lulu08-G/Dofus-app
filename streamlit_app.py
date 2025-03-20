@@ -210,6 +210,9 @@ elif page == "Page test":
     def get_item_details(ankama_id):
         url = f"https://api.dofusdu.de/dofus3/v1/fr/items/equipment/{ankama_id}"
         response = requests.get(url)
+    def get_resource_details(ankama_id):
+        url = f"https://api.dofusdu.de/dofus3/v1/fr/items/resources/{item_id}"
+        response = requests.get(url)
 
         if response.status_code == 200:
             try:
@@ -241,7 +244,7 @@ elif page == "Page test":
             subtype = ingredient.get('item_subtype')
 
             # 🔎 Récupérer les détails de la ressource
-            item_details = get_item_details(item_id)  # Remplacer get_resource_details par get_item_details
+            item_details = get_resource_details(item_id)  # Remplacer get_resource_details par get_item_details
 
             if not item_details:
                 st.warning(f"❗ Détails introuvables pour l'ID {item_id}")
