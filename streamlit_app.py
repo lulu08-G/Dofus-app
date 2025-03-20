@@ -237,7 +237,7 @@ elif page == "Page test":
     if not isinstance(recipe, list):
         st.error("⚠️ Erreur : la recette n'est pas une liste valide.")
         st.write(recipe)  # Debugging
-        return
+         return
 
     for ingredient in recipe:
         item_id = ingredient.get('item_ankama_id')
