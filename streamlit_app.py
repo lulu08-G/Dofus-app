@@ -56,18 +56,52 @@ if page == "Accueil":
             return {}
 
     def show_recipe(recipe):
-        if not recipe:
-            st.warning("❌ Pas de recette pour cet item.")
-            return
+    if not recipe:
+        st.warning("❌ Pas de recette pour cet item.")
+        return
 
-        st.success("✅ Recette disponible !")
-        for ingredient in recipe:
-            item_id = ingredient['item_ankama_id']
-            quantity = ingredient['quantity']
-            subtype = ingredient['item_subtype']
+    st.success("✅ Recette disponible !")
 
-            # Afficher les détails de chaque ingrédient
-            st.markdown(f"➡️ **{quantity}x** [Item ID : `{item_id}`] - Type : {subtype}")
+    for ingredient in recipe:
+        item_id = ingredient['item_ankama_id']
+        quantity = ingredient['quantity']
+        subtype = ingredient['item_subtype']
+
+        # ➡️ Nouvelle fonction pour récupérer les détails du composant (image et nom)
+        def get_resource_details(ankama_id):
+            url = f"https://api.dofusdu.de/dofus3/v1/fr/items/resources/{ankama_id}"
+            response = requests.get(url)
+
+            if response.status_code == 200:
+                try:
+                    return response.json()
+                except json.JSONDecodeError:
+                    st.error(f"Erreur JSON pour l'ID {ankama_id}")
+                    return {}
+            else:
+                st.error(f"Erreur API {response.status_code} pour l'ID {ankama_id}")
+                return {}
+
+        # On récupère les infos du composant
+        resource_details = get_resource_details(item_id)
+
+        if resource_details:
+            item_name = resource_details.get('name', 'Nom inconnu')
+            item_image = resource_details.get('image_urls', {}).get('icon', None)
+
+            cols = st.columns([1, 6])
+
+            with cols[0]:
+                if item_image:
+                    st.image(item_image, width=40)
+                else:
+                    st.write("❓")
+
+            with cols[1]:
+                st.markdown(f"**{quantity}x {item_name}**")
+        else:
+            st.warning(f"Détails introuvables pour l'ID {item_id}")
+
 
     def show_item_stats(item):
         st.subheader(f"📊 Statistiques de {item['name']}")
