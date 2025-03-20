@@ -241,7 +241,7 @@ elif page == "Page test":
             subtype = ingredient.get('item_subtype')
 
             # 🔎 Récupérer les détails de la ressource
-            item_details = get_resource_details(item_id)
+            item_details = get_item_details(item_id)  # Remplacer get_resource_details par get_item_details
 
             if not item_details:
                 st.warning(f"❗ Détails introuvables pour l'ID {item_id}")
