@@ -220,6 +220,14 @@ elif page == "Page test":
             st.error(f"Erreur API : {response.status_code}")
             return {}
 
+
+
+
+
+
+
+
+    
     def show_recipe(recipe):
         if not recipe:
             st.warning("❌ Pas de recette pour cet item.")
@@ -234,24 +242,52 @@ elif page == "Page test":
             # Afficher les détails de chaque ingrédient
             st.markdown(f"➡️ **{quantity}x** [Item ID : `{item_id}`] - Type : {subtype}")
             
-        if ankama_id:
-            item_details = get_resource_details(ankama_id)
+     def show_recipe(recipe):
+    if not recipe:
+        st.warning("❌ Pas de recette pour cet item.")
+        return
 
-            if item_details:
-                st.markdown(f"### Résultat pour l'ID Ankama `{ankama_id}`")
+    st.success("✅ Recette disponible !")
 
-                image_url = item_details.get('image_urls', {}).get('icon', None)
-                item_name = item_details.get('name', 'Nom inconnu')
+    for ingredient in recipe:
+        item_id = ingredient.get('item_ankama_id')
+        quantity = ingredient.get('quantity')
+        subtype = ingredient.get('item_subtype')
 
-                st.markdown(f"**Nom :** {item_name}")
+        # 🔎 Récupérer les détails de la ressource
+        item_details = get_resource_details(item_id)
 
+        if not item_details:
+            st.warning(f"❗ Détails introuvables pour l'ID {item_id}")
+            continue
+
+        item_name = item_details.get('name', 'Nom inconnu')
+        image_url = item_details.get('image_urls', {}).get('icon')
+
+        # 🖼️ Affichage en colonnes
+        cols = st.columns([1, 5])
+
+        with cols[0]:
             if image_url:
-                st.image(image_url, width=150)
+                st.image(image_url, width=50)
             else:
-                st.warning("Aucune image trouvée pour cet item.")
-        else:
-            st.warning("Aucun détail trouvé pour cet ID Ankama.")
+                st.write("❓")  # Icône manquante
 
+        with cols[1]:
+            st.markdown(f"**{quantity}x** {item_name} _(Type : {subtype})_")
+
+
+
+
+
+
+
+
+
+
+
+
+    
     def show_item_stats(item):
         st.subheader(f"📊 Statistiques de {item['name']}")
         stats = item.get('effects', [])
