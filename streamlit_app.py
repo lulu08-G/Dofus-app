@@ -352,56 +352,73 @@ elif page == "Page test":
 elif page == "DESIGNE":
 
 
-    st.title("🧑‍🎓 DofusBook - Equipement & Statistiques 🛡️")
-    
+    import streamlit as st
+
+# ========================
+# PAGE VISUEL
+# ========================
+if page == "Page Visuel":
+    st.title("🛠️ Dofusbook - Visualisation d'Équipement")
+
     # Exemple d'équipement
-    st.subheader("🔨 Nom de l'équipement : Epée de Légende")
-    
-    # Image de l'équipement
-    st.image("https://via.placeholder.com/150", width=150)
-    
-    # Informations principales
-    st.markdown("**Niveau :** 100")
-    st.markdown("**Type :** Epée")
-    st.markdown("**Description :** Une épée légendaire forgée dans les flammes d'un volcan.")
-    st.markdown("**Pods :** 10")
-    st.markdown("**Critiques :** 10% de chance de coup critique")
-    
-    # Section des statistiques de l'équipement
-    st.subheader("📊 Statistiques de l'équipement")
-    
-    # Tableau des statistiques
-    stats_data = [
-        ["Attaque", 50, 100, "50 à 100"],
-        ["Chance", 10, 20, "10 à 20"],
-        ["Agilité", 15, 30, "15 à 30"],
-        ["Vitalité", 100, 150, "100 à 150"]
-    ]
-    
-    st.table(stats_data)
-    
-    # Section de la recette de craft
+    equipment = {
+        "name": "Bâton de Craqueleur",
+        "level": 50,
+        "type": "Bâton",
+        "image_url": "https://www.dofus.com/fr/img/db-items/1295.png",  # Exemple d'image
+        "description": "Un bâton magique pour les utilisateurs expérimentés.",
+        "pods": 15,
+        "is_weapon": True,
+        "critical_hit_probability": 10,
+        "effects": [
+            {"type": {"name": "Force"}, "int_minimum": 10, "int_maximum": 20, "formatted": "10 à 20"},
+            {"type": {"name": "Vitalité"}, "int_minimum": 50, "int_maximum": 100, "formatted": "50 à 100"}
+        ],
+        "recipe": [
+            {"item_ankama_id": 7225, "quantity": 3, "item_subtype": "Ressource"},
+            {"item_ankama_id": 7856, "quantity": 2, "item_subtype": "Ressource"}
+        ]
+    }
+
+    # Affichage des informations générales de l'équipement
+    col1, col2 = st.columns([1, 3])
+
+    with col1:
+        st.image(equipment['image_url'], width=150)
+
+    with col2:
+        st.markdown(f"### **Nom :** {equipment['name']}")
+        st.markdown(f"**Niveau :** {equipment['level']}")
+        st.markdown(f"**Type :** {equipment['type']}")
+        st.markdown(f"**Description :** {equipment['description']}")
+        st.markdown(f"**Pods :** {equipment['pods']}")
+        st.markdown(f"**Equipement :** {'Oui' if equipment['is_weapon'] else 'Non'}")
+        st.markdown(f"**Probabilité critique :** {equipment['critical_hit_probability']}%")
+
+    # Affichage des effets (statistiques)
+    st.subheader("📊 Statistiques")
+    data = []
+    for effect in equipment['effects']:
+        stat_type = effect['type']['name']
+        min_value = effect.get('int_minimum', 'N/A')
+        max_value = effect.get('int_maximum', 'N/A')
+        formatted = effect.get('formatted', 'N/A')
+
+        data.append([stat_type, min_value, max_value, formatted])
+
+    if data:
+        st.table(data)
+
+    # Affichage de la recette de craft
     st.subheader("🧪 Recette de Craft")
-    
-    recipe_data = [
-        ["Ingrédient 1", 3, "Item 1"],
-        ["Ingrédient 2", 2, "Item 2"],
-        ["Ingrédient 3", 5, "Item 3"]
-    ]
-    
-    # Affichage des ingrédients nécessaires à la recette
-    st.markdown("**Pour crafter cette épée, vous aurez besoin de :**")
-    
-    for ingredient in recipe_data:
-        st.markdown(f"➡️ **{ingredient[1]}x** {ingredient[0]} (Type : {ingredient[2]})")
-    
-    # Informations supplémentaires
-    st.subheader("💡 Informations supplémentaires")
-    
-    st.markdown("**Conditions d'utilisation :**")
-    st.markdown("- Niveau 100 requis.")
-    st.markdown("- Doit être utilisé par un guerrier de la lumière.")
-    
-    # Footer pour un style visuel
+    if equipment['recipe']:
+        for ingredient in equipment['recipe']:
+            st.markdown(f"- **{ingredient['quantity']}x** Item ID : `{ingredient['item_ankama_id']}` - Type : {ingredient['item_subtype']}")
+    else:
+        st.info("Aucune recette de craft disponible pour cet équipement.")
+
+    # Exemple de mise en page inspirée de Dofusbook
     st.markdown("---")
-    st.markdown("**DofusBook - Simulation d'équipement**")
+    st.markdown("### Informations supplémentaires :")
+    st.markdown(f"**Critiques :** Probabilité critique : {equipment['critical_hit_probability']}%")
+
