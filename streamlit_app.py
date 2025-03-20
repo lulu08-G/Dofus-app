@@ -350,10 +350,11 @@ elif page == "Page test":
 # DESIGNE
 # ========================
 elif page == "DESIGNE":
-    st.title("🧑‍🎓 DofusBook - Equipement & Statistiques 🛡️")
 
+    st.title("🧑‍🎓 DofusBook - Equipement & Statistiques 🛡️")
+    
     # Recherche d'un item
-        search_query = st.text_input("🔍 Recherche d'un équipement :")
+    search_query = st.text_input("🔍 Recherche d'un équipement :")
     
     def search_items(query):
         if not query:
@@ -361,7 +362,7 @@ elif page == "DESIGNE":
     
         params = {
             "query": query,
-                "limit": 5
+            "limit": 5
         }
     
         url = "https://api.dofusdu.de/dofus3/v1/fr/items/equipment/search"
@@ -478,11 +479,3 @@ elif page == "DESIGNE":
                 else:
                     st.warning("Item incomplet :")
                     st.json(item)
-    
-    
-    
-    
-    
-    
-    
-    
