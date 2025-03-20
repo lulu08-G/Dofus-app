@@ -239,43 +239,43 @@ elif page == "Page test":
 
     def show_recipe(recipe):
         if not recipe:
-            st.warning("❌ Pas de recette pour cet item.")
-            return
+        st.warning("❌ Pas de recette pour cet item.")
+        return
 
-        st.success("✅ Recette disponible !")
+    st.success("✅ Recette disponible !")
 
-        # ✅ Vérification pour éviter NameError
-        if not isinstance(recipe, list):
-            st.error("⚠️ Erreur : la recette n'est pas une liste valide.")
-            st.write(recipe)  # Debugging
-            return
+    # ✅ Vérification pour éviter NameError
+    if not isinstance(recipe, list):
+        st.error("⚠️ Erreur : la recette n'est pas une liste valide.")
+        st.write(recipe)  # Debugging
+        return
 
-        for ingredient in recipe:
-            item_id = ingredient.get('item_ankama_id')
-            quantity = ingredient.get('quantity')
-            subtype = ingredient.get('item_subtype')
+    for ingredient in recipe:
+        item_id = ingredient.get('item_ankama_id')
+        quantity = ingredient.get('quantity')
+        subtype = ingredient.get('item_subtype')
 
-            # 🔎 Récupérer les détails de la ressource
-            item_details = get_resource_details(item_id)  # Utilisation de get_resource_details avec item_id
+        # 🔎 Récupérer les détails de la ressource
+        item_details = get_resource_details(item_id)  # Utilisation de get_resource_details avec item_id
 
-            if not item_details:
-                st.warning(f"❗ Détails introuvables pour l'ID {item_id}")
-                continue
+        if not item_details:
+            st.warning(f"❗ Détails introuvables pour l'ID {item_id}")
+            continue
 
-            item_name = item_details.get('name', 'Nom inconnu')
-            image_url = item_details.get('image_urls', {}).get('icon')
+        item_name = item_details.get('name', 'Nom inconnu')
+        image_url = item_details.get('image_urls', {}).get('icon')
 
-            # 🖼️ Affichage en colonnes
-            cols = st.columns([1, 5])
+        # 🖼️ Affichage en colonnes sans grand espace blanc
+        cols = st.columns([1, 5])
 
-            with cols[0]:
-                if image_url:
-                    st.image(image_url, width=50)
-                else:
-                    st.write("❓")  # Icône manquante
+        with cols[0]:
+            if image_url:
+                st.image(image_url, width=50, use_column_width=True)
+            else:
+                st.write("❓")  # Icône manquante
 
-            with cols[1]:
-                st.markdown(f"**{quantity}x** {item_name} _(Type : {subtype})_")
+        with cols[1]:
+            st.markdown(f"**{quantity}x** {item_name} _(Type : {subtype})_")
 
     def show_item_stats(item):
         st.subheader(f"📊 Statistiques de {item['name']}")
