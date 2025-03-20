@@ -229,7 +229,7 @@ elif page == "Page test":
                     st.warning("❌ Pas de recette pour cet item.")
                     return
 
-            st.success("✅ Recette disponible !")
+                    st.success("✅ Recette disponible !")
 
     for ingredient in recipe:
         item_id = ingredient.get('item_ankama_id')
