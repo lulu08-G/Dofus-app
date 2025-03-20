@@ -235,7 +235,7 @@ elif page == "Page test":
             st.markdown(f"➡️ **{quantity}x** [Item ID : `{item_id}`] - Type : {subtype}")
             
         if ankama_id:
-        item_details = get_resource_details(ankama_id)
+            item_details = get_resource_details(ankama_id)
 
             if item_details:
                 st.markdown(f"### Résultat pour l'ID Ankama `{ankama_id}`")
