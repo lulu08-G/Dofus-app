@@ -237,13 +237,13 @@ elif page == "Page test":
         if ankama_id:
         item_details = get_resource_details(ankama_id)
 
-        if item_details:
-            st.markdown(f"### Résultat pour l'ID Ankama `{ankama_id}`")
+            if item_details:
+                st.markdown(f"### Résultat pour l'ID Ankama `{ankama_id}`")
 
-            image_url = item_details.get('image_urls', {}).get('icon', None)
-            item_name = item_details.get('name', 'Nom inconnu')
+                image_url = item_details.get('image_urls', {}).get('icon', None)
+                item_name = item_details.get('name', 'Nom inconnu')
 
-            st.markdown(f"**Nom :** {item_name}")
+                st.markdown(f"**Nom :** {item_name}")
 
             if image_url:
                 st.image(image_url, width=150)
