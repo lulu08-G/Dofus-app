@@ -351,13 +351,6 @@ elif page == "Page test":
 # ========================
 elif page == "DESIGNE":
 
-
-    import streamlit as st
-
-# ========================
-# PAGE VISUEL
-# ========================
-if page == "Page Visuel":
     st.title("🛠️ Dofusbook - Visualisation d'Équipement")
 
     # Exemple d'équipement
