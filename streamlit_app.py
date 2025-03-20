@@ -211,7 +211,18 @@ elif page == "Page test":
         url = f"https://api.dofusdu.de/dofus3/v1/fr/items/equipment/{ankama_id}"
         response = requests.get(url)
 
-    def get_resource_details(item_id):  # Correction du paramètre pour correspondre à l'appel
+        if response.status_code == 200:
+            try:
+                return response.json()
+            except json.JSONDecodeError:
+                st.error("Erreur de formatage JSON : la réponse de l'API n'est pas un JSON valide.")
+                st.text(response.text)
+                return {}
+        else:
+            st.error(f"Erreur API : {response.status_code}")
+            return {}
+
+    def get_resource_details(item_id):  # Correction de l'argument ici : 'ankama_id' -> 'item_id'
         url = f"https://api.dofusdu.de/dofus3/v1/fr/items/resources/{item_id}"
         response = requests.get(url)
 
@@ -254,12 +265,12 @@ elif page == "Page test":
             item_name = item_details.get('name', 'Nom inconnu')
             image_url = item_details.get('image_urls', {}).get('icon')
 
-            # 🖼️ Affichage en colonnes sans grand espace blanc
+            # 🖼️ Affichage en colonnes
             cols = st.columns([1, 5])
 
             with cols[0]:
                 if image_url:
-                    st.image(image_url, width=50, use_column_width=True)
+                    st.image(image_url, width=50)
                 else:
                     st.write("❓")  # Icône manquante
 
@@ -308,6 +319,8 @@ elif page == "Page test":
                             st.markdown(f"**Type :** {item['type']['name']}")
                             st.markdown(f"**Description :** {item.get('description', 'Aucune description disponible.')}")
 
+                        # **PROBLÈME DE L'INDENTATION** :
+                        # Ligne suivante maintenant correctement indentée
                         item_details = get_item_details(item['ankama_id'])
 
                         if 'recipe' in item_details and item_details['recipe']:
