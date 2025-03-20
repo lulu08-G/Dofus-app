@@ -6,7 +6,7 @@ import json
 # MENU DE NAVIGATION
 # ========================
 st.sidebar.title("🔀 Navigation")
-page = st.sidebar.radio("Aller à :", ["Accueil", "Test Image Item", "Page test"])
+page = st.sidebar.radio("Aller à :", ["Accueil", "Test Image Item", "Page test", "DESIGNE"])
 
 # ========================
 # PAGE ACCUEIL
@@ -341,3 +341,148 @@ elif page == "Page test":
                 else:
                     st.warning("Item incomplet :")
                     st.json(item)
+
+
+
+
+
+# ========================
+# DESIGNE
+# ========================
+elif page == "DESIGNE":
+    st.title("🧑‍🎓 DofusBook - Equipement & Statistiques 🛡️")
+
+    # Recherche d'un item
+        search_query = st.text_input("🔍 Recherche d'un équipement :")
+    
+    def search_items(query):
+        if not query:
+            return []
+    
+        params = {
+            "query": query,
+                "limit": 5
+        }
+    
+        url = "https://api.dofusdu.de/dofus3/v1/fr/items/equipment/search"
+        response = requests.get(url, params=params)
+    
+        if response.status_code == 200:
+            try:
+                return response.json()
+            except json.JSONDecodeError:
+                st.error("Erreur de formatage JSON.")
+                st.text(response.text)
+                return []
+        else:
+            st.error(f"Erreur API : {response.status_code}")
+            return []
+    
+    def get_item_details(ankama_id):
+        url = f"https://api.dofusdu.de/dofus3/v1/fr/items/equipment/{ankama_id}"
+        response = requests.get(url)
+    
+        if response.status_code == 200:
+            try:
+                return response.json()
+            except json.JSONDecodeError:
+                st.error("Erreur de formatage JSON.")
+                st.text(response.text)
+                return {}
+        else:
+            st.error(f"Erreur API : {response.status_code}")
+            return {}
+    
+    # Affichage des statistiques de l'item
+    def show_item_stats(item):
+        st.subheader(f"📊 Statistiques de {item['name']}")
+        stats = item.get('effects', [])
+    
+        if not stats:
+            st.warning("Aucune statistique disponible pour cet item.")
+            return
+    
+        data = []
+        for stat in stats:
+            stat_type = stat['type']['name']
+            min_value = stat.get('int_minimum', 'N/A')
+            max_value = stat.get('int_maximum', 'N/A')
+            formatted = stat.get('formatted', 'N/A')
+    
+            data.append([stat_type, min_value, max_value, formatted])
+    
+        # Tableau des statistiques
+        if data:
+            st.table(data)
+    
+    # Affichage de la recette de craft
+    def show_recipe(recipe):
+        if not recipe:
+            st.warning("❌ Pas de recette pour cet item.")
+            return
+    
+        st.success("✅ Recette disponible !")
+        for ingredient in recipe:
+            item_id = ingredient.get('item_ankama_id')
+            quantity = ingredient.get('quantity')
+            subtype = ingredient.get('item_subtype')
+    
+            # Affichage en colonnes pour les ingrédients
+            st.markdown(f"➡️ **{quantity}x** [Item ID : `{item_id}`] - Type : {subtype}")
+    
+    # Si une recherche est faite
+    if search_query:
+        items = search_items(search_query)
+    
+        if not items:
+            st.warning("Aucun résultat trouvé pour cette recherche.")
+        else:
+            st.subheader("📋 Résultats :")
+    
+            for item in items:
+                if 'name' in item and 'level' in item:
+                    with st.expander(f"{item['name']} (Lvl {item['level']})"):
+                        col1, col2 = st.columns([1, 3])
+    
+                        # Affichage de l'image à gauche
+                        with col1:
+                            st.image(item['image_urls']['icon'], width=150)
+    
+                        # Informations sur l'équipement à droite
+                        with col2:
+                            st.markdown(f"**Nom :** {item['name']}")
+                            st.markdown(f"**Niveau :** {item['level']}")
+                            st.markdown(f"**Type :** {item['type']['name']}")
+                            st.markdown(f"**Description :** {item.get('description', 'Aucune description disponible.')}")
+    
+                        # Récupérer les détails supplémentaires de l'item
+                        item_details = get_item_details(item['ankama_id'])
+    
+                        # Afficher la recette si elle existe
+                        if 'recipe' in item_details and item_details['recipe']:
+                            st.markdown("---")
+                            st.markdown("### 🧪 Recette de craft :")
+                            show_recipe(item_details['recipe'])
+                        else:
+                            st.info("Pas de recette disponible pour cet item.")
+                    
+                        # Afficher les statistiques
+                        show_item_stats(item_details)
+    
+                        # Autres informations
+                        st.markdown("### Informations supplémentaires :")
+                        st.markdown(f"**Pods :** {item_details.get('pods', 'N/A')}")
+                        st.markdown(f"**Conditions :** {item_details.get('conditions', 'Aucune condition disponible.')}") 
+                        st.markdown(f"**Equipement :** {item_details.get('is_weapon', 'N/A')}")
+                        st.markdown(f"**Critiques :** Probabilité critique : {item_details.get('critical_hit_probability', 'N/A')}%")
+                else:
+                    st.warning("Item incomplet :")
+                    st.json(item)
+    
+    
+    
+    
+    
+    
+    
+    
