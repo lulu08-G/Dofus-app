@@ -235,9 +235,9 @@ elif page == "Page test":
 
     # ✅ Vérification pour éviter NameError
     if not isinstance(recipe, list):
-        st.error("⚠️ Erreur : la recette n'est pas une liste valide.")
-        st.write(recipe)  # Debugging
-        return
+            st.error("⚠️ Erreur : la recette n'est pas une liste valide.")
+            st.write(recipe)  # Debugging
+            return
 
     for ingredient in recipe:
         item_id = ingredient.get('item_ankama_id')
