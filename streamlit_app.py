@@ -224,7 +224,7 @@ elif page == "Page test":
 
 
             
-      def show_recipe(recipe):
+    def show_recipe(recipe):
                 if not recipe:
                     st.warning("❌ Pas de recette pour cet item.")
                     return
