@@ -227,14 +227,14 @@ elif page == "Page test":
 
             
     def show_recipe(recipe):
-     if not recipe:
+        if not recipe:
         st.warning("❌ Pas de recette pour cet item.")
-        return
+            return
 
     st.success("✅ Recette disponible !")
 
     # ✅ Vérification pour éviter NameError
-    if not isinstance(recipe, list):
+        if not isinstance(recipe, list):
             st.error("⚠️ Erreur : la recette n'est pas une liste valide.")
             st.write(recipe)  # Debugging
                 return
