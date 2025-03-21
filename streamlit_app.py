@@ -485,22 +485,37 @@ elif page == "DESIGNE":
 # Douda
 # ========================
 elif page == "dou":
-    # Lien pour exécuter le workflow GitHub Actions via API
     def trigger_github_action():
+        # Remplace '123' par ton token GitHub réel !
         headers = {
-            "Authorization": "123"  # Utilise ton token GitHub
+            "Accept": "application/vnd.github+json",  # Toujours bien de préciser
+            "Authorization": "Bearer 123"  # Important d'ajouter "Bearer"
         }
-        url = "https://api.github.com/repos/lulu08-G/Dofus-app/actions/workflows/doduda.yml/dispatches"
-        data = {
-            "ref": "main"  # La branche à utiliser
-        }
-        response = requests.post(url, json=data, headers=headers)
-        return response.status_code
     
-    # Bouton Streamlit pour exécuter le workflow GitHub Actions
+        url = "https://api.github.com/repos/lulu08-G/Dofus-app/actions/workflows/doduda.yml/dispatches"
+    
+        data = {
+            "ref": "main"  # Branche sur laquelle tu veux déclencher l'action
+        }
+    
+        response = requests.post(url, json=data, headers=headers)
+    
+        # Debug complet
+        st.write("Statut HTTP :", response.status_code)
+        st.write("Réponse brute :", response.text)
+    
+        return response.status_code, response.text
+    
+    # Interface Streamlit
+    st.title("Déclencheur GitHub Actions - Doduda 🚀")
+    
     if st.button("Exécuter Doduda"):
-        status = trigger_github_action()
-        if status == 201:
-            st.success("Le processus Doduda a été lancé sur GitHub Actions !")
+        status, message = trigger_github_action()
+        
+        if status == 204:  # Succès : "No Content" (workflow déclenché avec succès)
+            st.success("🎉 Le workflow Doduda a été déclenché sur GitHub Actions !")
+        elif status == 201:  # Parfois succès sur certaines APIs
+            st.success("🎉 Le workflow Doduda a été créé avec succès !")
         else:
-            st.error("Erreur lors du lancement de GitHub Actions.")
+            st.error(f"❌ Erreur lors du lancement de GitHub Actions. Code: {status}")
+            st.code(message)
