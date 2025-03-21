@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 import json
-from doduda import Doduda
+import subprocess
 
 # Initialise Doduda (le client DofusDB)
 doduda = Doduda()
