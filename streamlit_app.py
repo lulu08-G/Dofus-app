@@ -2,6 +2,13 @@ import streamlit as st
 import requests
 import json
 
+# Configuration de la page doit être la première commande Streamlit
+st.set_page_config(
+    page_title="Page avec CSS personnalisé",
+    page_icon="✨",
+    layout="wide"
+)
+
 # ========================
 # MENU DE NAVIGATION
 # ========================
@@ -349,13 +356,7 @@ elif page == "Page test":
 # ========================
 # PAGE DESIGNE
 # ========================
-if page == "DESIGNE":
-    st.set_page_config(
-        page_title="Page avec CSS personnalisé",
-        page_icon="✨",
-        layout="wide"
-    )
-
+elif page == "DESIGNE":
     # CSS personnalisé
     css = """
     <style>
@@ -476,3 +477,4 @@ if page == "DESIGNE":
     # Injection CSS et HTML dans Streamlit
     st.markdown(css, unsafe_allow_html=True)
     st.markdown(html, unsafe_allow_html=True)
+
