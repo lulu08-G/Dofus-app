@@ -485,7 +485,7 @@ elif page == "DESIGNE":
 # Douda
 # ========================
 elif page == "dou":
-            def run_doduda_command():
+    def run_doduda_command():
         # Exemple d'appel à Doduda avec subprocess
         command = ["doduda", "map"]
         result = subprocess.run(command, capture_output=True, text=True)
