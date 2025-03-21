@@ -1,0 +1,30 @@
+name: Run Doduda
+
+on:
+  push:
+    branches:
+      - main  # Cette action sera exécutée chaque fois qu'il y a une mise à jour sur la branche principale.
+
+jobs:
+  doduda:
+    runs-on: ubuntu-latest  # Utilisation d'un environnement Ubuntu pour exécuter les commandes
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2  # Récupère le code du dépôt
+
+      - name: Install dependencies
+        run: |
+          curl -s https://get.dofusdu.de/doduda | sh  # Installation de Doduda
+          sudo apt-get install docker.io  # Installation de Docker
+          docker pull doduda/doduda  # Téléchargement de l'image Docker de Doduda
+
+      - name: Run Doduda command
+        run: |
+          docker run --rm doduda/doduda map > doduda_output.json  # Exécution de Doduda et sortie dans un fichier JSON
+
+      - name: Upload output to GitHub
+        uses: actions/upload-artifact@v2  # Télécharge le fichier généré comme artefact
+        with:
+          name: doduda-output
+          path: doduda_output.json
