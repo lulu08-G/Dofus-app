@@ -1,18 +1,33 @@
-name: Doduda Workflow
+name: Exécution de Doduda
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:  # Ce trigger permet d'exécuter le workflow manuellement via l'interface GitHub
 
 jobs:
-  run-doduda:
+  run_doduda:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout code
+    - name: Checkout le code du dépôt
       uses: actions/checkout@v2
 
-    - name: Run Doduda command
+    - name: Installer Docker
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker.io
+
+    - name: Télécharger le binaire doduda
       run: |
         curl -s https://get.dofusdu.de/doduda | sh
-        # Optionally, add more commands to use Doduda
+
+    - name: Exécuter la commande doduda
+      run: |
+        # Exemple : Utiliser doduda pour récupérer des données
+        doduda --full
+
+    - name: Sauvegarder le résultat
+      run: |
+        # Déplacer ou sauvegarder le résultat de l'exécution
+        mkdir resultats
+        mv * resultats/
+        echo "Les résultats sont stockés dans le dossier resultats."
