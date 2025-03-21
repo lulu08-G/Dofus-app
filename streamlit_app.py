@@ -487,41 +487,41 @@ elif page == "DESIGNE":
 # Douda
 # ========================
 elif page == "dou":
-    # Titre de l'application
-st.title("🔎 Dofus Drop Finder")
-
-# Champ de recherche utilisateur
-search_query = st.text_input("Recherche un monstre 🐲 :", "")
-
-# Si l'utilisateur tape quelque chose
-if search_query:
-    # Recherche le monstre dans Doduda
-    monsters = doduda.search('monsters', search_query)
-
-    if monsters:
-        # Affiche chaque monstre trouvé
-        for monster in monsters:
-            st.header(monster['name']['fr'])
-
-            # Niveau du monstre
-            st.subheader(f"Niveau : {monster.get('level', 'Inconnu')}")
-
-            # Liste des drops du monstre
-            drops = monster.get('drops', [])
-
-            if drops:
-                st.write("💎 **Drops :**")
-                for drop in drops:
-                    item_name = drop['item']['name']['fr']
-                    drop_rate = drop.get('percentDropForProspecting', 0)
-                    st.write(f"- **{item_name}** : {drop_rate}% de chance avec 100PP")
-            else:
-                st.info("Aucun drop trouvé pour ce monstre 😢")
+        # Titre de l'application
+    st.title("🔎 Dofus Drop Finder")
+    
+    # Champ de recherche utilisateur
+    search_query = st.text_input("Recherche un monstre 🐲 :", "")
+    
+    # Si l'utilisateur tape quelque chose
+    if search_query:
+        # Recherche le monstre dans Doduda
+        monsters = doduda.search('monsters', search_query)
+    
+        if monsters:
+            # Affiche chaque monstre trouvé
+            for monster in monsters:
+                st.header(monster['name']['fr'])
+    
+                # Niveau du monstre
+                st.subheader(f"Niveau : {monster.get('level', 'Inconnu')}")
+    
+                # Liste des drops du monstre
+                drops = monster.get('drops', [])
+    
+                if drops:
+                    st.write("💎 **Drops :**")
+                    for drop in drops:
+                        item_name = drop['item']['name']['fr']
+                        drop_rate = drop.get('percentDropForProspecting', 0)
+                        st.write(f"- **{item_name}** : {drop_rate}% de chance avec 100PP")
+                else:
+                    st.info("Aucun drop trouvé pour ce monstre 😢")
+        else:
+            st.warning("Aucun monstre trouvé avec ce nom.")
     else:
-        st.warning("Aucun monstre trouvé avec ce nom.")
-else:
-    st.info("Tape le nom d'un monstre pour commencer la recherche !")
-
-# Footer
-st.markdown("---")
-st.caption("⚔️ App créée avec Doduda + Streamlit by ChatGPT 😉")
+        st.info("Tape le nom d'un monstre pour commencer la recherche !")
+    
+    # Footer
+    st.markdown("---")
+    st.caption("⚔️ App créée avec Doduda + Streamlit by ChatGPT 😉")
