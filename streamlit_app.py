@@ -350,137 +350,148 @@ elif page == "Page test":
 # PAGE DESIGNE
 # ========================
 if page == "DESIGNE":
-    st.title("Page avec CSS personnalisé")
-    
-    html_code = """
-    <header>
-        <h1>Bienvenue sur ma page</h1>
-    </header>
+    st.set_page_config(
+    page_title="Page avec CSS personnalisé",
+    page_icon="✨",
+    layout="wide"
+)
 
-    <nav>
-        <a href="#">Accueil</a>
-        <a href="#">À propos</a>
-        <a href="#">Services</a>
-        <a href="#">Contact</a>
-    </nav>
+# CSS personnalisé
+css = """
+<style>
+    :root {
+        --font-roboto: "Lato", Arial, sans-serif;
+        --font-roboto-medium: "Lato Bold", Arial, sans-serif;
+        --font-roboto-bold: "Lato Black", Arial, sans-serif;
+        --font-open-sans: "Open Sans Condensed Bold", Arial, sans-serif;
+        --font-xxl: 1.5rem;
+        --font-xl: 1.19rem;
+        --font-l: 1.065rem;
+        --font-m: .94rem;
+        --font-ms: .88rem;
+        --font-s: .815rem;
+        --font-xs: .8rem;
+        --line-height-xxl: 1.7rem;
+        --line-height-xl: 1.4rem;
+        --line-height-l: 1.2rem;
+        --line-height-m: 1.1rem;
+        --line-height-s: 1rem;
+        --line-height-xs: .9rem;
+        --color-rose: #fb7185;
+        --color-pink: #f472b6;
+        --bs-primary: rgb(74, 67, 59);
+        --bs-secondary: rgb(106, 168, 79);
+        --bs-danger: #d9534f;
+        --bs-light: #f8f9fa;
+        --bs-dark: #212529;
+        --bs-primary-text-emphasis: #1e1b18;
+        --bs-light-text-emphasis: #495057;
+        --bs-success-bg-subtle: #ddeccd;
+        --bs-warning-bg-subtle: #ebc600;
+    }
 
-    <div class="main-content">
-        <div class="card">
-            <h2>Card 1</h2>
-            <p>Ceci est un exemple de carte avec un peu de contenu pour montrer l'effet d'ombre et de survol.</p>
-        </div>
-        <div class="card">
-            <h2>Card 2</h2>
-            <p>Une autre carte, toujours avec un effet de survol qui l'agrandit légèrement.</p>
-        </div>
-        <div class="card">
-            <h2>Card 3</h2>
-            <p>Encore une carte, avec un texte explicatif pour tester l'espacement et la mise en page.</p>
-        </div>
+    body {
+        font-family: var(--font-roboto);
+        background-color: var(--bs-light);
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        color: var(--bs-dark-text-emphasis);
+    }
+
+    header {
+        background-color: var(--bs-primary);
+        color: white;
+        padding: 1rem 2rem;
+        text-align: center;
+        font-size: var(--font-xl);
+    }
+
+    nav {
+        background-color: var(--bs-secondary);
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        justify-content: center;
+    }
+
+    nav a {
+        text-decoration: none;
+        color: white;
+        font-size: var(--font-m);
+        padding: 1rem;
+        transition: background-color 0.3s;
+    }
+
+    nav a:hover {
+        background-color: var(--bs-primary);
+    }
+
+    .main-content {
+        padding: 2rem;
+        line-height: var(--line-height-xl);
+    }
+
+    .card {
+        background-color: var(--bs-light);
+        border: 1px solid #e0e0e0;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+    }
+
+    footer {
+        background-color: var(--bs-primary);
+        color: white;
+        text-align: center;
+        padding: 1rem;
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+    }
+
+</style>
+"""
+
+# HTML de la page
+html = """
+<header>
+    <h1>Bienvenue sur ma page</h1>
+</header>
+
+<nav>
+    <a href="#">Accueil</a>
+    <a href="#">À propos</a>
+    <a href="#">Services</a>
+    <a href="#">Contact</a>
+</nav>
+
+<div class="main-content">
+    <div class="card">
+        <h2>Card 1</h2>
+        <p>Ceci est un exemple de carte avec un peu de contenu pour montrer l'effet d'ombre et de survol.</p>
     </div>
-    <footer>
-        <p>&copy; 2025 Ma page avec style CSS personnalisé</p>
-    </footer>
-    """
 
-    # Inject CSS with HTML
-    css_code = """
-    <style>
-        :root {
-            --font-roboto: "Lato", Arial, sans-serif;
-            --font-roboto-medium: "Lato Bold", Arial, sans-serif;
-            --font-roboto-bold: "Lato Black", Arial, sans-serif;
-            --font-open-sans: "Open Sans Condensed Bold", Arial, sans-serif;
-            --font-xxl: 1.5rem;
-            --font-xl: 1.19rem;
-            --font-l: 1.065rem;
-            --font-m: .94rem;
-            --font-ms: .88rem;
-            --font-s: .815rem;
-            --font-xs: .8rem;
-            --line-height-xxl: 1.7rem;
-            --line-height-xl: 1.4rem;
-            --line-height-l: 1.2rem;
-            --line-height-m: 1.1rem;
-            --line-height-s: 1rem;
-            --line-height-xs: .9rem;
-            --color-rose: #fb7185;
-            --color-pink: #f472b6;
-            --bs-primary: rgb(74, 67, 59);
-            --bs-secondary: rgb(106, 168, 79);
-            --bs-danger: #d9534f;
-            --bs-light: #f8f9fa;
-            --bs-dark: #212529;
-            --bs-primary-text-emphasis: #1e1b18;
-            --bs-light-text-emphasis: #495057;
-            --bs-success-bg-subtle: #ddeccd;
-            --bs-warning-bg-subtle: #ebc600;
-        }
+    <div class="card">
+        <h2>Card 2</h2>
+        <p>Une autre carte, toujours avec un effet de survol qui l'agrandit légèrement.</p>
+    </div>
 
-        body {
-            font-family: var(--font-roboto);
-            background-color: var(--bs-light);
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            color: var(--bs-dark-text-emphasis);
-        }
+    <div class="card">
+        <h2>Card 3</h2>
+        <p>Encore une carte, avec un texte explicatif pour tester l'espacement et la mise en page.</p>
+    </div>
+</div>
 
-        header {
-            background-color: var(--bs-primary);
-            color: white;
-            padding: 1rem;
-            text-align: center;
-            font-size: var(--font-xl);
-        }
+<footer>
+    <p>&copy; 2025 Ma page avec style CSS personnalisé</p>
+</footer>
+"""
 
-        nav {
-            background-color: var(--bs-secondary);
-            padding: 0.5rem;
-            display: flex;
-            justify-content: center;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: white;
-            font-size: var(--font-m);
-            padding: 0.5rem;
-            transition: background-color 0.3s;
-        }
-
-        nav a:hover {
-            background-color: var(--bs-primary);
-        }
-
-        .main-content {
-            padding: 1rem;
-            line-height: var(--line-height-xl);
-        }
-
-        .card {
-            background-color: var(--bs-light);
-            border: 1px solid var(--bs-gray-200);
-            padding: 1rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
-        }
-
-        .card:hover {
-            transform: scale(1.05);
-        }
-
-        footer {
-            background-color: var(--bs-primary);
-            color: white;
-            text-align: center;
-            padding: 1rem;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-        }
-    </style>
-    """
-
-    st.markdown(css_code + html_code, unsafe_allow_html=True)
+# Injection CSS et HTML dans Streamlit
+st.markdown(css, unsafe_allow_html=True)
+st.markdown(html, unsafe_allow_html=True)
