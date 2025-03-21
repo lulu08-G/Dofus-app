@@ -508,6 +508,7 @@ elif page == "dou":
     
     # Interface Streamlit
     st.title("Déclencheur GitHub Actions - Doduda 🚀")
+    st.write(st.secrets.keys())
     
     if st.button("Exécuter Doduda"):
         status, message = trigger_github_action()
