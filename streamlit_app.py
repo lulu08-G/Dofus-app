@@ -485,12 +485,30 @@ elif page == "DESIGNE":
 # Douda
 # ========================
 elif page == "dou":
-    def run_doduda_command():
-        # Exemple d'appel à Doduda avec subprocess
-        command = ["doduda", "map"]
-        result = subprocess.run(command, capture_output=True, text=True)
-        return result.stdout
+        # Titre de la page
+    st.title("Interagir avec Doduda")
     
-    st.title("Dofus 3 Data avec Doduda")
-    result = run_doduda_command()
-    st.text(result)  # Afficher le résultat de la commande dans Streamlit
+    # Choisir une action
+    st.subheader("Sélectionnez une commande Doduda à exécuter")
+    
+    # Option de commande à exécuter
+    command = st.selectbox(
+        "Choisissez une commande",
+        ["--full", "--map", "--extract", "--generate"]
+    )
+    
+    # Bouton pour lancer la commande
+    if st.button("Exécuter"):
+        st.write("Lancement de la commande Doduda : ", command)
+    
+        # Lancer la commande doduda via subprocess
+        result = subprocess.run(
+            ["doduda", command],
+            capture_output=True,
+            text=True
+        )
+    
+        # Affichage des résultats
+        st.text_area("Résultats de la commande :", result.stdout)
+        if result.stderr:
+            st.text_area("Erreurs :", result.stderr)
