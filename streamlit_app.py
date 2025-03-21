@@ -490,7 +490,7 @@ elif page == "dou":
         headers = {
             "Authorization": "Bearer ton_token_personnel"  # Utilise ton token GitHub
         }
-        url = "https://api.github.com/repos/lulu08-G/Dofus-app/blob/main/.github/workflows/doduda.yml/dispatches"
+        url = "https://api.github.com/repos/lulu08-G/Dofus-app/actions/workflows/doduda.yml/dispatches"
         data = {
             "ref": "main"  # La branche à utiliser
         }
