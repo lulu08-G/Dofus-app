@@ -485,6 +485,14 @@ elif page == "DESIGNE":
 # Douda
 # ========================
 elif page == "dou":
+    try:
+    result = subprocess.run(["which", "doduda"], capture_output=True, text=True)
+    if result.returncode == 0:
+        print("Doduda est installé et accessible.")
+    else:
+        print("Doduda n'est pas trouvé.")
+except Exception as e:
+    print(f"Erreur : {e}")
         # Titre de la page
     st.title("Interagir avec Doduda")
     
