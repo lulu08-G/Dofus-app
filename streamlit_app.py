@@ -485,40 +485,22 @@ elif page == "DESIGNE":
 # Douda
 # ========================
 elif page == "dou":
-   
-        # Titre de la page
-    st.title("Interagir avec Doduda")
-
-    try:
-        result = subprocess.run(["which", "doduda"], capture_output=True, text=True)
-        if result.returncode == 0:
-            print("Doduda est installé et accessible.")
+    # Lien pour exécuter le workflow GitHub Actions via API
+    def trigger_github_action():
+        headers = {
+            "Authorization": "Bearer ton_token_personnel"  # Utilise ton token GitHub
+        }
+        url = "https://api.github.com/repos/ton-utilisateur/ton-depot/actions/workflows/ton_workflow.yml/dispatches"
+        data = {
+            "ref": "main"  # La branche à utiliser
+        }
+        response = requests.post(url, json=data, headers=headers)
+        return response.status_code
+    
+    # Bouton Streamlit pour exécuter le workflow GitHub Actions
+    if st.button("Exécuter Doduda"):
+        status = trigger_github_action()
+        if status == 201:
+            st.success("Le processus Doduda a été lancé sur GitHub Actions !")
         else:
-            print("Doduda n'est pas trouvé.")
-    except Exception as e:
-        print(f"Erreur : {e}")
-
-    # Choisir une action
-    st.subheader("Sélectionnez une commande Doduda à exécuter")
-    
-    # Option de commande à exécuter
-    command = st.selectbox(
-        "Choisissez une commande",
-        ["--full", "--map", "--extract", "--generate"]
-    )
-    
-    # Bouton pour lancer la commande
-    if st.button("Exécuter"):
-        st.write("Lancement de la commande Doduda : ", command)
-    
-        # Lancer la commande doduda via subprocess
-        result = subprocess.run(
-            ["doduda", command],
-            capture_output=True,
-            text=True
-        )
-    
-        # Affichage des résultats
-        st.text_area("Résultats de la commande :", result.stdout)
-        if result.stderr:
-            st.text_area("Erreurs :", result.stderr)
+            st.error("Erreur lors du lancement de GitHub Actions.")
