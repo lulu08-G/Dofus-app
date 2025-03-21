@@ -489,7 +489,7 @@ elif page == "dou":
         # Remplace '123' par ton token GitHub réel !
         headers = {
             "Accept": "application/vnd.github+json",  # Toujours bien de préciser
-            "Authorization": f"Bearer {st.secrets['SECRET']}"
+            "Authorization": f"Bearer {st.secrets['GITHUB_TOKEN']}"
         }
     
         url = "https://api.github.com/repos/lulu08-G/Dofus-app/actions/workflows/doduda.yml/dispatches"
