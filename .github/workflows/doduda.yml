@@ -1,7 +1,7 @@
 name: Exécution de Doduda
 
 on:
-  workflow_dispatch:  # Ce trigger permet d'exécuter le workflow manuellement via l'interface GitHub
+  workflow_dispatch:  # Lance manuellement via GitHub
 
 jobs:
   run_doduda:
@@ -10,14 +10,11 @@ jobs:
     steps:
     - name: Checkout le code du dépôt
       uses: actions/checkout@v2
-      
-    - name: Remove containerd (conflicting package)
-      run: sudo apt-get remove -y containerd
 
-    - name: Installer Docker
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y docker.io
+    # Pas besoin d'installer Docker !
+
+    - name: Vérifier la version de Docker (déjà installé)
+      run: docker --version
 
     - name: Télécharger le binaire doduda
       run: |
@@ -32,4 +29,3 @@ jobs:
         mkdir resultats
         mv * resultats/
         echo "Les résultats sont stockés dans le dossier resultats."
-
