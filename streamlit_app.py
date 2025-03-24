@@ -520,45 +520,47 @@ elif page == "dou":
         else:
             st.error(f"❌ Erreur lors du lancement de GitHub Actions. Code: {status}")
                     st.code(message)
-        # Fonction pour charger les données des monstres depuis les fichiers téléchargés
-        def load_monster_data():
-            # Assurons-nous que les données sont dans le dossier "resultats"
-            result_folder = './resultats'
-            if not os.path.exists(result_folder):
-                st.error("Données non trouvées, vérifie si le workflow GitHub Actions a bien fonctionné.")
-                return {}
-        
-            # Charger les données des monstres pour Dofus 2 ou Dofus 3
-            monster_data_file = os.path.join(result_folder, 'dofus2_monsters.json')  # Exemple de fichier JSON, à ajuster selon la structure réelle
-            if os.path.exists(monster_data_file):
-                with open(monster_data_file, 'r') as file:
-                    return json.load(file)
+
+
+    # Fonction pour charger les données des monstres depuis les fichiers téléchargés
+    def load_monster_data():
+        # Assurons-nous que les données sont dans le dossier "resultats"
+        result_folder = './resultats'
+        if not os.path.exists(result_folder):
+            st.error("Données non trouvées, vérifie si le workflow GitHub Actions a bien fonctionné.")
             return {}
-        
-        # Fonction pour afficher les informations d'un monstre
-        def display_monster_info(monster_name):
-            monsters = load_monster_data()
-            if monsters:
-                # Rechercher le monstre par son nom
-                monster = next((m for m in monsters if m['name'].lower() == monster_name.lower()), None)
-                if monster:
-                    st.subheader(f"Monstre: {monster['name']}")
-                    st.write(f"**Niveau**: {monster['level']}")
-                    st.write(f"**Vie**: {monster['hp']}")
-                    st.write(f"**PA**: {monster['pa']}")
-                    st.write(f"**PM**: {monster['pm']}")
-                    st.write(f"**Dommages**: {monster['damage']}")
-                else:
-                    st.warning(f"Monstre '{monster_name}' non trouvé.")
+    
+        # Charger les données des monstres pour Dofus 2 ou Dofus 3
+        monster_data_file = os.path.join(result_folder, 'dofus2_monsters.json')  # Exemple de fichier JSON, à ajuster selon la structure réelle
+        if os.path.exists(monster_data_file):
+            with open(monster_data_file, 'r') as file:
+                return json.load(file)
+        return {}
+    
+    # Fonction pour afficher les informations d'un monstre
+    def display_monster_info(monster_name):
+        monsters = load_monster_data()
+        if monsters:
+            # Rechercher le monstre par son nom
+            monster = next((m for m in monsters if m['name'].lower() == monster_name.lower()), None)
+            if monster:
+                st.subheader(f"Monstre: {monster['name']}")
+                st.write(f"**Niveau**: {monster['level']}")
+                st.write(f"**Vie**: {monster['hp']}")
+                st.write(f"**PA**: {monster['pa']}")
+                st.write(f"**PM**: {monster['pm']}")
+                st.write(f"**Dommages**: {monster['damage']}")
             else:
-                st.warning("Aucune donnée de monstre disponible.")
-        
-        # Interface utilisateur Streamlit
-        st.title("Affichage des monstres de Dofus")
-        
-        # Champ de recherche du monstre
-        monster_name = st.text_input("Entrez le nom du monstre", "Dragon Cochon")
-        
-        # Afficher les informations du monstre
-        if monster_name:
-            display_monster_info(monster_name)
+                st.warning(f"Monstre '{monster_name}' non trouvé.")
+        else:
+            st.warning("Aucune donnée de monstre disponible.")
+    
+    # Interface utilisateur Streamlit
+    st.title("Affichage des monstres de Dofus")
+    
+    # Champ de recherche du monstre
+    monster_name = st.text_input("Entrez le nom du monstre", "Dragon Cochon")
+    
+    # Afficher les informations du monstre
+    if monster_name:
+        display_monster_info(monster_name)
