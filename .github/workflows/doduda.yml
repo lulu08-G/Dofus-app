@@ -27,5 +27,5 @@ jobs:
     - name: Sauvegarder le résultat
       run: |
         mkdir resultats
-        mv * resultats/
-        echo "Les résultats sont stockés dans le dossier resultats."
+        mv doduda_output.txt resultats/  # Ou juste les fichiers de sortie
+
