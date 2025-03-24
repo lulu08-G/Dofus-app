@@ -17,12 +17,13 @@ jobs:
 
     - name: Télécharger les données Dofus 
       run: |
-        doduda
-        doduda map
+         doduda
+         doduda map
 
-    - name: Organiser les résultats
+
+    - name: Sauvegarder le résultat
       run: |
-        mkdir -p resultats
+        mkdir resultats
         shopt -s extglob
         mv !(resultats) resultats/
         echo "Les résultats sont stockés dans le dossier resultats."
