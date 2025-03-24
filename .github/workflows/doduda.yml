@@ -1,24 +1,29 @@
-name: Télécharger les données de Dofus
+name: Exécution de Doduda
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # Permet d'exécuter le workflow manuellement via l'interface GitHub
 
 jobs:
-  download_dofus_data:
-    runs-on: ubuntu-latest
+  run_doduda:
+    runs-on: ubuntu-latest  # Utilise une machine Ubuntu pour exécuter le workflow
 
     steps:
-    - name: Checkout le code du dépôt
+    - name: Checkout du code du dépôt
       uses: actions/checkout@v2
 
-    - name: Installer doduda
+    - name: Télécharger le binaire doduda
       run: |
         curl -s https://get.dofusdu.de/doduda | sh
 
-    - name: Télécharger les données de Dofus
+    - name: Télécharger les données Dofus 
       run: |
-        doduda --full --output resultats
+         doduda
+         doduda map
 
-    - name: Vérifier le contenu du dossier 'resultats'
+
+    - name: Sauvegarder les résultats
       run: |
-        ls -l resultats
+        # Créer un dossier resultats et déplacer les données téléchargées
+        mkdir resultats
+        mv * resultats/
+        echo "Les résultats sont stockés dans le dossier resultats."
