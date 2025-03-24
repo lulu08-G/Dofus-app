@@ -601,3 +601,17 @@ elif page == "dou":
     monster_name = st.text_input("Entrez le nom du monstre à rechercher", "")
     if monster_name:
         display_monster_info(monster_name)
+        
+        result_folder = "resultats"
+    
+    if os.path.exists(result_folder) and os.listdir(result_folder):
+        st.success(f"Dossier '{result_folder}' trouvé !")
+        files = os.listdir(result_folder)
+        st.write("Fichiers disponibles :")
+        st.write(files)
+    
+        for file in files:
+            path = os.path.join(result_folder, file)
+            st.download_button(f"Télécharger {file}", open(path, "rb").read(), file_name=file)
+    else:
+        st.error(f"Dossier '{result_folder}' introuvable ou vide.")
