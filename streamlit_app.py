@@ -517,9 +517,7 @@ elif page == "dou":
             st.success("🎉 Le workflow Doduda a été déclenché sur GitHub Actions !")
         elif status == 201:  # Parfois succès sur certaines APIs
             st.success("🎉 Le workflow Doduda a été créé avec succès !")
-        else:
-            st.error(f"❌ Erreur lors du lancement de GitHub Actions. Code: {status}")
-                    st.code(message)
+   
 
 
     # Fonction pour charger les données des monstres depuis les fichiers téléchargés
