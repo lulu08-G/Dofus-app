@@ -520,8 +520,16 @@ elif page == "dou":
    
 
 
-    # Fonction pour exécuter des commandes shell personnalisées
-    def run_custom_command(command):
+
+
+
+
+
+
+
+
+    # Fonction pour exécuter des commandes doduda
+    def run_doduda_command(command):
         try:
             result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             return result.stdout.decode("utf-8"), result.stderr.decode("utf-8")
@@ -567,18 +575,18 @@ elif page == "dou":
     # Interface utilisateur Streamlit
     st.title("Gestion des résultats de Dofus")
     
-    # Commande personnalisée
-    st.subheader("Exécution de commande personnalisée")
-    command_input = st.text_area("Entrez la commande à exécuter", "")
-    if st.button("Exécuter la commande"):
-        if command_input:
-            stdout, stderr = run_custom_command(command_input)
+    # Exécution des commandes doduda
+    st.subheader("Exécution d'une commande doduda")
+    doduda_command = st.text_input("Entrez la commande doduda à exécuter", "")
+    if st.button("Exécuter la commande doduda"):
+        if doduda_command:
+            stdout, stderr = run_doduda_command(f"doduda {doduda_command}")
             st.subheader("Sortie standard")
             st.write(stdout)
             st.subheader("Erreur")
             st.write(stderr)
         else:
-            st.warning("Veuillez entrer une commande à exécuter.")
+            st.warning("Veuillez entrer une commande doduda à exécuter.")
     
     # Affichage du contenu du dossier 'resultats' pour le débogage
     st.subheader("Contenu du dossier 'resultats'")
