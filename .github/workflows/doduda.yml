@@ -25,7 +25,7 @@ jobs:
         # Utilise doduda avec Docker pour récupérer toutes les données de Dofus 3
         doduda --full --game dofus3 --download
 
-   - name: Sauvegarder le résultat
+    - name: Sauvegarder le résultat
       run: |
         mkdir resultats
         shopt -s extglob
