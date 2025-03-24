@@ -17,6 +17,7 @@ jobs:
 
     - name: Télécharger les données Dofus 
       run: |
+        doduda
         doduda map
 
     - name: Organiser les résultats
