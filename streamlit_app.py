@@ -520,6 +520,15 @@ elif page == "dou":
    
 
 
+    # Fonction pour exécuter des commandes shell personnalisées
+    def run_custom_command(command):
+        try:
+            result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            return result.stdout.decode("utf-8"), result.stderr.decode("utf-8")
+        except subprocess.CalledProcessError as e:
+            return e.stdout.decode("utf-8"), e.stderr.decode("utf-8")
+    
+    # Fonction pour charger les données des monstres depuis les fichiers téléchargés
     def load_monster_data():
         result_folder = './resultats'
         
@@ -556,9 +565,31 @@ elif page == "dou":
             st.warning("Aucune donnée de monstre disponible.")
     
     # Interface utilisateur Streamlit
-    st.title("Affichage des monstres de Dofus")
+    st.title("Gestion des résultats de Dofus")
     
-    monster_name = st.text_input("Entrez le nom du monstre", "Dragon Cochon")
+    # Commande personnalisée
+    st.subheader("Exécution de commande personnalisée")
+    command_input = st.text_area("Entrez la commande à exécuter", "")
+    if st.button("Exécuter la commande"):
+        if command_input:
+            stdout, stderr = run_custom_command(command_input)
+            st.subheader("Sortie standard")
+            st.write(stdout)
+            st.subheader("Erreur")
+            st.write(stderr)
+        else:
+            st.warning("Veuillez entrer une commande à exécuter.")
     
+    # Affichage du contenu du dossier 'resultats' pour le débogage
+    st.subheader("Contenu du dossier 'resultats'")
+    result_folder = './resultats'
+    if os.path.exists(result_folder):
+        st.write(os.listdir(result_folder))
+    else:
+        st.write("Le dossier 'resultats' n'existe pas ou est vide.")
+    
+    # Recherche d'un monstre
+    st.subheader("Recherche d'un monstre")
+    monster_name = st.text_input("Entrez le nom du monstre à rechercher", "")
     if monster_name:
         display_monster_info(monster_name)
