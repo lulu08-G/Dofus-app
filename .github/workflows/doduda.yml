@@ -11,7 +11,7 @@ jobs:
     - name: Checkout le code du dépôt
       uses: actions/checkout@v2
       
-      name: Remove containerd (conflicting package)
+    - name: Remove containerd (conflicting package)
       run: sudo apt-get remove -y containerd
 
     - name: Installer Docker
@@ -25,12 +25,11 @@ jobs:
 
     - name: Exécuter la commande doduda
       run: |
-        # Exemple : Utiliser doduda pour récupérer des données
         doduda --full
 
     - name: Sauvegarder le résultat
       run: |
-        # Déplacer ou sauvegarder le résultat de l'exécution
         mkdir resultats
         mv * resultats/
         echo "Les résultats sont stockés dans le dossier resultats."
+
