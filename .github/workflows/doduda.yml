@@ -10,6 +10,9 @@ jobs:
     steps:
     - name: Checkout le code du dépôt
       uses: actions/checkout@v2
+      
+      name: Remove containerd (conflicting package)
+      run: sudo apt-get remove -y containerd
 
     - name: Installer Docker
       run: |
