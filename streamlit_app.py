@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import json
 import subprocess
-
+import os 
 
 
 # Configuration de la page doit être la première commande Streamlit
