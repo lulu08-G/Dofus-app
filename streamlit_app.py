@@ -520,16 +520,19 @@ elif page == "dou":
    
 
 
-    # Fonction pour charger les données des monstres depuis les fichiers téléchargés
     def load_monster_data():
-        # Assurons-nous que les données sont dans le dossier "resultats"
         result_folder = './resultats'
+        
         if not os.path.exists(result_folder):
             st.error("Données non trouvées, vérifie si le workflow GitHub Actions a bien fonctionné.")
             return {}
-    
+        
+        # Afficher les fichiers présents dans le dossier resultats pour diagnostiquer
+        st.write("Contenu du dossier 'resultats':")
+        st.write(os.listdir(result_folder))
+        
         # Charger les données des monstres pour Dofus 2 ou Dofus 3
-        monster_data_file = os.path.join(result_folder, 'dofus2_monsters.json')  # Exemple de fichier JSON, à ajuster selon la structure réelle
+        monster_data_file = os.path.join(result_folder, 'dofus2_monsters.json')  # Exemple de fichier JSON
         if os.path.exists(monster_data_file):
             with open(monster_data_file, 'r') as file:
                 return json.load(file)
@@ -539,7 +542,6 @@ elif page == "dou":
     def display_monster_info(monster_name):
         monsters = load_monster_data()
         if monsters:
-            # Rechercher le monstre par son nom
             monster = next((m for m in monsters if m['name'].lower() == monster_name.lower()), None)
             if monster:
                 st.subheader(f"Monstre: {monster['name']}")
@@ -556,9 +558,7 @@ elif page == "dou":
     # Interface utilisateur Streamlit
     st.title("Affichage des monstres de Dofus")
     
-    # Champ de recherche du monstre
     monster_name = st.text_input("Entrez le nom du monstre", "Dragon Cochon")
     
-    # Afficher les informations du monstre
     if monster_name:
         display_monster_info(monster_name)
