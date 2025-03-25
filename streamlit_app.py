@@ -491,21 +491,23 @@ elif page == "DESIGNE":
 # ========================
 elif page == "dou":
     
-   def trigger_github_action():
+    # Fonction pour récupérer l'artefact depuis GitHub Actions
+    def trigger_github_action():
         st.write("🔄 Début du processus...")
-    
+        
         # Vérifie si le token est bien défini
         GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"] if "GITHUB_TOKEN" in st.secrets else None
         if not GITHUB_TOKEN:
             st.error("❌ Erreur : Token GitHub manquant.")
             return
         st.write("✅ Token trouvé.")
-    
+        
         headers = {
             "Authorization": f"Bearer {GITHUB_TOKEN}",
             "Accept": "application/vnd.github+json"
         }
     
+        # URL de l'API GitHub pour récupérer l'artefact
         artifact_url = "https://api.github.com/repos/lulu08-G/Dofus-app/actions/artifacts/2814294485/zip"
         st.write(f"Tentative de téléchargement depuis : {artifact_url}")
         
@@ -530,16 +532,24 @@ elif page == "dou":
         except Exception as e:
             st.error(f"❌ Erreur pendant le processus : {e}")
             st.write("Erreur lors du téléchargement ou de la décompression.")
-    
-            if "dou" in st.session_state:
-                st.title("📥 Récupération des données Doduda")
-            
-                if st.button("🔄 Télécharger les données depuis GitHub Actions"):
-                    trigger_github_action()
-            
-    
-
-
         
-     
-
+    
+    # Page principale
+    if "dou" in st.session_state:
+        st.title("📥 Récupération des données Doduda")
+    
+        st.write("🔄 Initialisation...")
+        
+        # Affichage du bouton et exécution du processus
+        if st.button("🔄 Télécharger les données depuis GitHub Actions"):
+            st.write("🔄 Processus en cours...")
+            trigger_github_action()
+    else:
+        st.write("🔴 Erreur : Clé 'dou' manquante dans la session.")
+                
+        
+    
+    
+            
+         
+    
