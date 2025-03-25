@@ -18,10 +18,10 @@ jobs:
     - name: Télécharger les données Dofus
       run: |
         # 1. Télécharge les données nécessaires dans le dossier ./data (par défaut)
-        doduda --output ./data
+        doduda --output ./resultats
         
         # 2. Exécute le map après avoir téléchargé les fichiers
-        doduda map --input ./data --output ./resultats
+        doduda map --output ./resultats
 
     - name: Upload des résultats en tant qu'artefact
       uses: actions/upload-artifact@v4
