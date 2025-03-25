@@ -491,12 +491,14 @@ elif page == "dou":
     
 
     
+    
+    
     # Fonction pour récupérer l'artefact depuis GitHub Actions
     def trigger_github_action():
         st.write("🔄 Téléchargement de l'artefact en cours...")
     
         # Vérifie si le token est bien défini
-        GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"] if "GITHUB_TOKEN" in st.secrets else None
+        GITHUB_TOKEN = st.secrets.get("GITHUB_TOKEN")  # Utilisation de .get() pour éviter de planter si absent
         if not GITHUB_TOKEN:
             st.error("❌ Erreur : Token GitHub manquant.")
             return
@@ -512,9 +514,10 @@ elif page == "dou":
         artifact_url = "https://api.github.com/repos/lulu08-G/Dofus-app/actions/artifacts/2814294485/zip"
         st.write(f"Tentative de téléchargement depuis : {artifact_url}")
         
-        # Télécharger l'artefact
         try:
             response = requests.get(artifact_url, headers=headers)
+            
+            # Log de la réponse
             st.write(f"Réponse reçue avec le code : {response.status_code}")
             
             if response.status_code == 200:
@@ -541,4 +544,4 @@ elif page == "dou":
     
         if st.button("🔄 Télécharger les données depuis GitHub Actions"):
             trigger_github_action()
-
+    
