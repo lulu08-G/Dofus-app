@@ -491,7 +491,7 @@ elif page == "DESIGNE":
 # ========================
 elif page == "dou":
     
-       def trigger_github_action():
+    def trigger_github_action():
         st.write("🔄 Début du processus...")
     
         # Vérifie si le token est bien défini
