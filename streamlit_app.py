@@ -501,6 +501,12 @@ elif page == "dou":
         }
     
         response = requests.post(url, json=data, headers=headers)
+        
+          # Ton URL d'artefact (vérifie qu'elle est correcte et accessible avec un token si nécessaire)
+        artifact_url = "https://github.com/lulu08-G/Dofus-app/actions/runs/14056009783/artifacts/2814294485"
+    
+    # Récupérer l'artefact
+        response = requests.get(artifact_url, headers={"Authorization": f"Bearer {st.secrets['GITHUB_TOKEN']})
     
         # Debug complet
         st.write("Statut HTTP :", response.status_code)
@@ -526,11 +532,7 @@ else:
             st.success("🎉 Le workflow Doduda a été créé avec succès !")
    
 
-    # Ton URL d'artefact (vérifie qu'elle est correcte et accessible avec un token si nécessaire)
-    artifact_url = "https://github.com/lulu08-G/Dofus-app/actions/runs/14056009783/artifacts/2814294485"
-    
-    # Récupérer l'artefact
-    response = requests.get(artifact_url, headers={"Authorization": f"Bearer {st.secrets['GITHUB_TOKEN']})
+  
     
     if response.status_code == 200:
         # Extraire le zip en mémoire
