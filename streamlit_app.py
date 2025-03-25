@@ -489,6 +489,8 @@ elif page == "DESIGNE":
 # ========================
 elif page == "dou":
     
+
+    
     # Fonction pour récupérer l'artefact depuis GitHub Actions
     def trigger_github_action():
         st.write("🔄 Téléchargement de l'artefact en cours...")
@@ -499,30 +501,39 @@ elif page == "dou":
             st.error("❌ Erreur : Token GitHub manquant.")
             return
         
+        st.write("✅ Token trouvé. Tentative de téléchargement de l'artefact...")
+    
         headers = {
             "Authorization": f"Bearer {GITHUB_TOKEN}",
             "Accept": "application/vnd.github+json"
         }
     
-        # URL de l'API GitHub pour récupérer l'artefact (Mise à jour nécessaire)
+        # URL de l'API GitHub pour récupérer l'artefact
         artifact_url = "https://api.github.com/repos/lulu08-G/Dofus-app/actions/artifacts/2814294485/zip"
-    
-        # Télécharger l'artefact
-        response = requests.get(artifact_url, headers=headers)
-    
-        if response.status_code == 200:
-            with zipfile.ZipFile(io.BytesIO(response.content)) as zip_ref:
-                zip_ref.extractall("resultats")  # Décompression dans 'resultats'
-            
-            st.success("✅ Artefact récupéré et extrait avec succès !")
-            
-            # Lister les fichiers extraits
-            files = os.listdir("resultats")
-            st.write("📂 Contenu du dossier 'resultats' :", files)
+        st.write(f"Tentative de téléchargement depuis : {artifact_url}")
         
-        else:
-            st.error(f"❌ Erreur lors du téléchargement : {response.status_code}")
-            st.write(response.text)  # Afficher la réponse de GitHub pour debug
+        # Télécharger l'artefact
+        try:
+            response = requests.get(artifact_url, headers=headers)
+            st.write(f"Réponse reçue avec le code : {response.status_code}")
+            
+            if response.status_code == 200:
+                st.write("✅ Téléchargement réussi, décompression en cours...")
+                with zipfile.ZipFile(io.BytesIO(response.content)) as zip_ref:
+                    zip_ref.extractall("resultats")  # Décompression dans 'resultats'
+                
+                st.success("✅ Artefact récupéré et extrait avec succès !")
+                
+                # Lister les fichiers extraits
+                files = os.listdir("resultats")
+                st.write("📂 Contenu du dossier 'resultats' :", files)
+            
+            else:
+                st.error(f"❌ Erreur lors du téléchargement : {response.status_code}")
+                st.write(response.text)  # Afficher la réponse de GitHub pour debug
+        except Exception as e:
+            st.error(f"❌ Erreur pendant le processus : {e}")
+            st.write("Erreur lors du téléchargement ou de la décompression.")
     
     # Interface Streamlit
     if "dou" in st.session_state:
@@ -530,3 +541,4 @@ elif page == "dou":
     
         if st.button("🔄 Télécharger les données depuis GitHub Actions"):
             trigger_github_action()
+
