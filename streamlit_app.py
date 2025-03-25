@@ -512,10 +512,7 @@ elif page == "dou":
     st.title("Déclencheur GitHub Actions - Doduda 🚀")
     st.write(st.secrets.keys())
     
-    # Extraire le zip en mémoire
- with zipfile.ZipFile(io.BytesIO(response.content)) as zip_ref:
-    zip_ref.extractall("resultats")  # Décompression dans un dossier 'resultats'
-    print("✅ Artefact récupéré et extrait avec succès !")
+   
     
 else:
     print(f"❌ Erreur lors du téléchargement : {response.status_code}")
@@ -581,6 +578,10 @@ else:
                 st.warning(f"Monstre '{monster_name}' non trouvé.")
         else:
             st.warning("Aucune donnée de monstre disponible.")
+             # Extraire le zip en mémoire
+             with zipfile.ZipFile(io.BytesIO(response.content)) as zip_ref:
+                    zip_ref.extractall("resultats")  # Décompression dans un dossier 'resultats'
+                        print("✅ Artefact récupéré et extrait avec succès !")
     
     # Interface utilisateur Streamlit
     st.title("Gestion des résultats de Dofus")
