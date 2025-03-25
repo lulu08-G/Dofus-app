@@ -494,8 +494,8 @@ elif page == "dou":
     
 
 
-    
-    def trigger_github_action():
+        
+        def trigger_github_action():
         st.write("🔄 Début du processus...")
     
         # Vérifie si le token est bien défini
@@ -529,7 +529,7 @@ elif page == "dou":
                 files = os.listdir("resultats")
                 st.write("📂 Contenu du dossier 'resultats' :", files)
             else:
-                st.error(f"❌ Erreur lors du téléchargement : {response.status_code}")
+                st.write(f"❌ Erreur lors du téléchargement : {response.status_code}")
                 st.write(response.text)  # Afficher la réponse de GitHub pour debug
         except Exception as e:
             st.error(f"❌ Erreur pendant le processus : {e}")
@@ -540,4 +540,3 @@ elif page == "dou":
     
         if st.button("🔄 Télécharger les données depuis GitHub Actions"):
             trigger_github_action()
-
