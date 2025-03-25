@@ -494,45 +494,16 @@ elif page == "dou":
             "Authorization": f"Bearer {st.secrets['GITHUB_TOKEN']}"
         }
     
-        url = "https://api.github.com/repos/lulu08-G/Dofus-app/actions/workflows/doduda.yml/dispatches"
-    
-        data = {
-            "ref": "main"  # Branche sur laquelle tu veux déclencher l'action
-        }
-    
-      
-    
-        # Debug complet
-        st.write("Statut HTTP :", response.status_code)
-        st.write("Réponse brute :", response.text)
-    
-        return response.status_code, response.text
-    
-    # Interface Streamlit
-    st.title("Déclencheur GitHub Actions - Doduda 🚀")
-    st.write(st.secrets.keys())
-    
-   
-    
-else:
-    print(f"❌ Erreur lors du téléchargement : {response.status_code}")
-    
-    if st.button("Exécuter Doduda"):
-        status, message = trigger_github_action()
+        artifact_url = "https://github.com/lulu08-G/Dofus-app/actions/runs/14056009783/artifacts/2814294485"
         
-        if status == 204:  # Succès : "No Content" (workflow déclenché avec succès)
-            st.success("🎉 Le workflow Doduda a été déclenché sur GitHub Actions !")
-        elif status == 201:  # Parfois succès sur certaines APIs
-            st.success("🎉 Le workflow Doduda a été créé avec succès !")
-
-
-
-
-
-    # Fonction pour exécuter des commandes doduda
-    def run_doduda_command(command):
-        try:
-            result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            return result.stdout.decode("utf-8"), result.stderr.decode("utf-8")
-        except subprocess.CalledProcessError as e:
-            return e.stdout.decode("utf-8"), e.stderr.decode("utf-8")
+        # Récupérer l'artefact
+        response = requests.get(artifact_url)
+        
+        if response.status_code == 200:
+            # Extraire le zip en mémoire
+            with zipfile.ZipFile(io.BytesIO(response.content)) as zip_ref:
+                zip_ref.extractall("resultats")  # Décompression dans un dossier 'resultats'
+            print("✅ Artefact récupéré et extrait avec succès !")
+        else:
+            print(f"❌ Erreur lors du téléchargement : {response.status_code}")
+       
