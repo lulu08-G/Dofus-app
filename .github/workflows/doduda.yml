@@ -1,11 +1,11 @@
-name: Exécution de Doduda
+nname: Exécution de Doduda (Test Rapide)
 
 on:
-  workflow_dispatch:  # Permet d'exécuter le workflow manuellement via l'interface GitHub
+  workflow_dispatch:
 
 jobs:
   run_doduda:
-    runs-on: ubuntu-latest  # Utilise une machine Ubuntu pour exécuter le workflow
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout du code du dépôt
@@ -21,16 +21,8 @@ jobs:
         echo '{"monster":"Bouftou","level":5,"hp":30}' > resultats/test_monster.json
         echo "Fichier de test créé dans resultats/"
 
-
-    - name: Sauvegarder le résultat
-      run: |
-        mkdir resultats
-        shopt -s extglob
-        mv !(resultats) resultats/
-        echo "Les résultats sont stockés dans le dossier resultats."
-
     - name: Upload des résultats en tant qu'artefact
       uses: actions/upload-artifact@v4
       with:
-        name: resultats-doduda
+        name: resultats-test
         path: resultats/
