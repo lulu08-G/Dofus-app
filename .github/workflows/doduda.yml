@@ -15,10 +15,11 @@ jobs:
       run: |
         curl -s https://get.dofusdu.de/doduda | sh
 
-    - name: Télécharger les données Dofus 
+   name: Créer un fichier test pour simuler les résultats
       run: |
-         doduda
-         doduda map
+        mkdir -p resultats
+        echo '{"monster":"Bouftou","level":5,"hp":30}' > resultats/test_monster.json
+        echo "Fichier de test créé dans resultats/"
 
 
     - name: Sauvegarder le résultat
