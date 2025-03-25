@@ -491,16 +491,16 @@ elif page == "DESIGNE":
 # ========================
 elif page == "dou":
     
-        # Forcer la clé 'dou' dans le session_state
+    # Forcer la clé 'dou' dans le session_state
     if "dou" not in st.session_state:
         st.session_state["dou"] = True
     
     st.write("La clé 'dou' est dans st.session_state !")
+    
     def trigger_github_action():
         st.write("🔄 Début du processus...")
     
-        # Vérifie si le token est bien défini
-        GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"] if "GITHUB_TOKEN" in st.secrets else None
+        GITHUB_TOKEN = st.secrets.get("GITHUB_TOKEN")
         if not GITHUB_TOKEN:
             st.error("❌ Erreur : Token GitHub manquant.")
             return
@@ -536,11 +536,11 @@ elif page == "dou":
             st.error(f"❌ Erreur pendant le processus : {e}")
             st.write("Erreur lors du téléchargement ou de la décompression.")
     
-    if "dou" in st.session_state:
-        st.title("📥 Récupération des données Doduda")
+    st.title("📥 Récupération des données Doduda")
     
-        if st.button("🔄 Télécharger les données depuis GitHub Actions"):
-            trigger_github_action()
+    if st.button("🔄 Télécharger les données depuis GitHub Actions"):
+        trigger_github_action()
+    
     def test_http_connection():
         st.write("🔄 Test de connexion HTTP...")
     
