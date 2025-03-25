@@ -531,12 +531,12 @@ elif page == "dou":
             st.error(f"❌ Erreur pendant le processus : {e}")
             st.write("Erreur lors du téléchargement ou de la décompression.")
     
-    if "dou" in st.session_state:
-        st.title("📥 Récupération des données Doduda")
-    
-        if st.button("🔄 Télécharger les données depuis GitHub Actions"):
-            trigger_github_action()
-    
+            if "dou" in st.session_state:
+                st.title("📥 Récupération des données Doduda")
+            
+                if st.button("🔄 Télécharger les données depuis GitHub Actions"):
+                    trigger_github_action()
+            
     
 
 
