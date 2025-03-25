@@ -1,4 +1,4 @@
-nname: Exécution de Doduda (Test Rapide)
+name: Exécution de Doduda (Test Rapide)
 
 on:
   workflow_dispatch:
@@ -8,21 +8,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout du code du dépôt
-      uses: actions/checkout@v2
+      - name: Checkout du code du dépôt
+        uses: actions/checkout@v2
 
-    - name: Télécharger le binaire doduda
-      run: |
-        curl -s https://get.dofusdu.de/doduda | sh
+      - name: Télécharger le binaire doduda
+        run: curl -s https://get.dofusdu.de/doduda | sh
 
-    - name: Créer un fichier test pour simuler les résultats
-      run: |
-        mkdir -p resultats
-        echo '{"monster":"Bouftou","level":5,"hp":30}' > resultats/test_monster.json
-        echo "Fichier de test créé dans resultats/"
+      - name: Créer un fichier test pour simuler les résultats
+        run: |
+          mkdir -p resultats
+          echo '{"monster":"Bouftou","level":5,"hp":30}' > resultats/test_monster.json
+          echo "Fichier de test créé dans resultats/"
 
-    - name: Upload des résultats en tant qu'artefact
-      uses: actions/upload-artifact@v4
-      with:
-        name: resultats-test
-        path: resultats/
+      - name: Upload des résultats en tant qu'artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultats-test
+          path: resultats/
