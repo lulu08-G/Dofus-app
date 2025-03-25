@@ -3,6 +3,8 @@ import requests
 import json
 import subprocess
 import os 
+import zipfile
+
 
 
 # Configuration de la page doit être la première commande Streamlit
@@ -509,6 +511,14 @@ elif page == "dou":
     # Interface Streamlit
     st.title("Déclencheur GitHub Actions - Doduda 🚀")
     st.write(st.secrets.keys())
+    
+     # Extraire le zip en mémoire
+    with zipfile.ZipFile(io.BytesIO(response.content)) as zip_ref:
+        zip_ref.extractall("resultats")  # Décompression dans un dossier 'resultats'
+    print("✅ Artefact récupéré et extrait avec succès !")
+    
+else:
+    print(f"❌ Erreur lors du téléchargement : {response.status_code}")
     
     if st.button("Exécuter Doduda"):
         status, message = trigger_github_action()
