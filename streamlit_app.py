@@ -529,8 +529,6 @@ else:
 
 
 
-
-
     # Fonction pour exécuter des commandes doduda
     def run_doduda_command(command):
         try:
@@ -538,85 +536,3 @@ else:
             return result.stdout.decode("utf-8"), result.stderr.decode("utf-8")
         except subprocess.CalledProcessError as e:
             return e.stdout.decode("utf-8"), e.stderr.decode("utf-8")
-    
-    # Fonction pour charger les données des monstres depuis les fichiers téléchargés
-    def load_monster_data():
-        result_folder = './resultats'
-        
-        if not os.path.exists(result_folder):
-            st.error("Données non trouvées, vérifie si le workflow GitHub Actions a bien fonctionné.")
-            return {}
-        
-        # Afficher les fichiers présents dans le dossier resultats pour diagnostiquer
-        st.write("Contenu du dossier 'resultats':")
-        st.write(os.listdir(result_folder))
-        
-        # Charger les données des monstres pour Dofus 2 ou Dofus 3
-        monster_data_file = os.path.join(result_folder, 'dofus2_monsters.json')  # Exemple de fichier JSON
-        if os.path.exists(monster_data_file):
-            with open(monster_data_file, 'r') as file:
-                return json.load(file)
-        return {}
-    
-    # Fonction pour afficher les informations d'un monstre
-    def display_monster_info(monster_name):
-        monsters = load_monster_data()
-        if monsters:
-            monster = next((m for m in monsters if m['name'].lower() == monster_name.lower()), None)
-            if monster:
-                st.subheader(f"Monstre: {monster['name']}")
-                st.write(f"**Niveau**: {monster['level']}")
-                st.write(f"**Vie**: {monster['hp']}")
-                st.write(f"**PA**: {monster['pa']}")
-                st.write(f"**PM**: {monster['pm']}")
-                st.write(f"**Dommages**: {monster['damage']}")
-            else:
-                st.warning(f"Monstre '{monster_name}' non trouvé.")
-        else:
-            st.warning("Aucune donnée de monstre disponible.")
-      
-    
-    
-    # Interface utilisateur Streamlit
-    st.title("Gestion des résultats de Dofus")
-    
-    # Exécution des commandes doduda
-    st.subheader("Exécution d'une commande doduda")
-    doduda_command = st.text_input("Entrez la commande doduda à exécuter", "")
-    if st.button("Exécuter la commande doduda"):
-        if doduda_command:
-            stdout, stderr = run_doduda_command(f"doduda {doduda_command}")
-            st.subheader("Sortie standard")
-            st.write(stdout)
-            st.subheader("Erreur")
-            st.write(stderr)
-        else:
-            st.warning("Veuillez entrer une commande doduda à exécuter.")
-    
-    # Affichage du contenu du dossier 'resultats' pour le débogage
-    st.subheader("Contenu du dossier 'resultats'")
-    result_folder = './resultats'
-    if os.path.exists(result_folder):
-        st.write(os.listdir(result_folder))
-    else:
-        st.write("Le dossier 'resultats' n'existe pas ou est vide.")
-    
-    # Recherche d'un monstre
-    st.subheader("Recherche d'un monstre")
-    monster_name = st.text_input("Entrez le nom du monstre à rechercher", "")
-    if monster_name:
-        display_monster_info(monster_name)
-        
-        result_folder = "resultats"
-    
-    if os.path.exists(result_folder) and os.listdir(result_folder):
-        st.success(f"Dossier '{result_folder}' trouvé !")
-        files = os.listdir(result_folder)
-        st.write("Fichiers disponibles :")
-        st.write(files)
-    
-        for file in files:
-            path = os.path.join(result_folder, file)
-            st.download_button(f"Télécharger {file}", open(path, "rb").read(), file_name=file)
-    else:
-        st.error(f"Dossier '{result_folder}' introuvable ou vide.")
