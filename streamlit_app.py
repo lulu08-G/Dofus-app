@@ -526,8 +526,19 @@ else:
             st.success("🎉 Le workflow Doduda a été créé avec succès !")
    
 
-
-
+    # Ton URL d'artefact (vérifie qu'elle est correcte et accessible avec un token si nécessaire)
+    artifact_url = "https://github.com/lulu08-G/Dofus-app/actions/runs/14056009783/artifacts/2814294485"
+    
+    # Récupérer l'artefact
+    response = requests.get(artifact_url, headers={"Authorization": f"Bearer {st.secrets['GITHUB_TOKEN']})
+    
+    if response.status_code == 200:
+        # Extraire le zip en mémoire
+        with zipfile.ZipFile(io.BytesIO(response.content)) as zip_ref:
+            zip_ref.extractall("resultats")  # Décompression dans un dossier 'resultats'
+        print("✅ Artefact récupéré et extrait avec succès !")
+    else:
+        print(f"❌ Erreur lors du téléchargement : {response.status_code}")
 
 
 
@@ -579,10 +590,6 @@ else:
         else:
             st.warning("Aucune donnée de monstre disponible.")
       
-            # Extraire le zip en mémoire
-            with zipfile.ZipFile(io.BytesIO(response.content)) as zip_ref:
-                zip_ref.extractall("resultats")  # Décompression dans un dossier 'resultats'
-            print("✅ Artefact récupéré et extrait avec succès !")
     
     
     # Interface utilisateur Streamlit
