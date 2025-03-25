@@ -500,13 +500,7 @@ elif page == "dou":
             "ref": "main"  # Branche sur laquelle tu veux déclencher l'action
         }
     
-        response = requests.post(url, json=data, headers=headers)
-        
-          # Ton URL d'artefact (vérifie qu'elle est correcte et accessible avec un token si nécessaire)
-        artifact_url = "https://github.com/lulu08-G/Dofus-app/actions/runs/14056009783/artifacts/2814294485"
-    
-    # Récupérer l'artefact
-        response = requests.get(artifact_url)
+      
     
         # Debug complet
         st.write("Statut HTTP :", response.status_code)
