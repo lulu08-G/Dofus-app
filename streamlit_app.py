@@ -529,6 +529,15 @@ elif page == "dou":
                 # Lister les fichiers extraits
                 files = os.listdir("resultats")
                 st.write("📂 Contenu du dossier 'resultats' :", files)
+                
+                # Afficher le contenu des fichiers extraits
+                for file in files:
+                    file_path = os.path.join("resultats", file)
+                    if os.path.isfile(file_path):
+                        st.write(f"### Contenu de `{file}`:")
+                        with open(file_path, "r") as f:
+                            content = f.read()
+                            st.code(content)
             else:
                 st.error(f"❌ Erreur lors du téléchargement : {response.status_code}")
                 st.write(response.text)  # Afficher la réponse de GitHub pour debug
