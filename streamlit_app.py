@@ -513,7 +513,7 @@ elif page == "dou":
     st.write(st.secrets.keys())
     
     # Extraire le zip en mémoire
-with zipfile.ZipFile(io.BytesIO(response.content)) as zip_ref:
+ with zipfile.ZipFile(io.BytesIO(response.content)) as zip_ref:
     zip_ref.extractall("resultats")  # Décompression dans un dossier 'resultats'
     print("✅ Artefact récupéré et extrait avec succès !")
     
