@@ -506,7 +506,7 @@ elif page == "dou":
         artifact_url = "https://github.com/lulu08-G/Dofus-app/actions/runs/14056009783/artifacts/2814294485"
     
     # Récupérer l'artefact
-        response = requests.get(artifact_url, headers={"Authorization": f"Bearer {st.secrets['GITHUB_TOKEN']})
+        response = requests.get(artifact_url)
     
         # Debug complet
         st.write("Statut HTTP :", response.status_code)
