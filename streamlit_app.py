@@ -541,3 +541,17 @@ elif page == "dou":
     
         if st.button("🔄 Télécharger les données depuis GitHub Actions"):
             trigger_github_action()
+    def test_http_connection():
+        st.write("🔄 Test de connexion HTTP...")
+    
+        try:
+            response = requests.get("https://jsonplaceholder.typicode.com/todos/1")
+            if response.status_code == 200:
+                st.write("✅ Connexion réussie !")
+                st.write(response.json())
+            else:
+                st.write(f"❌ Erreur lors du test de la connexion : {response.status_code}")
+        except Exception as e:
+            st.error(f"❌ Erreur lors de la requête HTTP : {e}")
+    
+    test_http_connection()
