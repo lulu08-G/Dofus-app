@@ -530,17 +530,6 @@ else:
             st.success("🎉 Le workflow Doduda a été déclenché sur GitHub Actions !")
         elif status == 201:  # Parfois succès sur certaines APIs
             st.success("🎉 Le workflow Doduda a été créé avec succès !")
-   
-
-  
-    
-    if response.status_code == 200:
-        # Extraire le zip en mémoire
-        with zipfile.ZipFile(io.BytesIO(response.content)) as zip_ref:
-            zip_ref.extractall("resultats")  # Décompression dans un dossier 'resultats'
-        print("✅ Artefact récupéré et extrait avec succès !")
-    else:
-        print(f"❌ Erreur lors du téléchargement : {response.status_code}")
 
 
 
