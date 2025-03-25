@@ -532,6 +532,8 @@ elif page == "dou":
             else:
                 st.error(f"❌ Erreur lors du téléchargement : {response.status_code}")
                 st.write(response.text)  # Afficher la réponse de GitHub pour debug
+        except zipfile.BadZipFile:
+            st.error("❌ Erreur : Le fichier téléchargé n'est pas un fichier zip valide.")
         except Exception as e:
             st.error(f"❌ Erreur pendant le processus : {e}")
             st.write("Erreur lors du téléchargement ou de la décompression.")
