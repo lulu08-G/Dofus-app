@@ -487,23 +487,45 @@ elif page == "DESIGNE":
 # Douda
 # ========================
 elif page == "dou":
+    
+    # Fonction pour récupérer l'artefact depuis GitHub Actions
     def trigger_github_action():
-        # Remplace '123' par ton token GitHub réel !
+        st.write("🔄 Téléchargement de l'artefact en cours...")
+    
+        # Vérifie si le token est bien défini
+        GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"] if "GITHUB_TOKEN" in st.secrets else None
+        if not GITHUB_TOKEN:
+            st.error("❌ Erreur : Token GitHub manquant.")
+            return
+        
         headers = {
-            "Accept": "application/vnd.github+json",  # Toujours bien de préciser
-            "Authorization": f"Bearer {st.secrets['GITHUB_TOKEN']}"
+            "Authorization": f"Bearer {GITHUB_TOKEN}",
+            "Accept": "application/vnd.github+json"
         }
     
-        artifact_url = "https://github.com/lulu08-G/Dofus-app/actions/runs/14056009783/artifacts/2814294485"
-        
-        # Récupérer l'artefact
-        response = requests.get(artifact_url)
-        
+        # URL de l'API GitHub pour récupérer l'artefact (Mise à jour nécessaire)
+        artifact_url = "https://api.github.com/repos/lulu08-G/Dofus-app/actions/artifacts/2814294485/zip"
+    
+        # Télécharger l'artefact
+        response = requests.get(artifact_url, headers=headers)
+    
         if response.status_code == 200:
-            # Extraire le zip en mémoire
             with zipfile.ZipFile(io.BytesIO(response.content)) as zip_ref:
-                zip_ref.extractall("resultats")  # Décompression dans un dossier 'resultats'
-            print("✅ Artefact récupéré et extrait avec succès !")
+                zip_ref.extractall("resultats")  # Décompression dans 'resultats'
+            
+            st.success("✅ Artefact récupéré et extrait avec succès !")
+            
+            # Lister les fichiers extraits
+            files = os.listdir("resultats")
+            st.write("📂 Contenu du dossier 'resultats' :", files)
+        
         else:
-            print(f"❌ Erreur lors du téléchargement : {response.status_code}")
-       
+            st.error(f"❌ Erreur lors du téléchargement : {response.status_code}")
+            st.write(response.text)  # Afficher la réponse de GitHub pour debug
+    
+    # Interface Streamlit
+    if "dou" in st.session_state:
+        st.title("📥 Récupération des données Doduda")
+    
+        if st.button("🔄 Télécharger les données depuis GitHub Actions"):
+            trigger_github_action()
