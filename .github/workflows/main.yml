@@ -17,10 +17,10 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: resultats-doduda
-        path: ./resultats
+        path: ./artifact
         
     - name: Unzip artifact
-      run: unzip ./artifact/resultats-doduda.zip -d ./resultats
+      run: unzip ./artifact/resultats-doduda.zip -d ./artifact
 
     - name: Setup Python
       uses: actions/setup-python@v2
