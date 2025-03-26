@@ -5,7 +5,7 @@ import subprocess
 import os 
 import io
 import zipfile
-
+import pandas as pd
 
 
 # Configuration de la page doit être la première commande Streamlit
@@ -363,76 +363,85 @@ elif page == "Page test":
 # PAGE DESIGNE
 # ========================
 elif page == "DESIGNE":
-    st.title("Page DESIGNE")
-
-    def download_and_extract_artifact():
-        # Lien vers l'artefact GitHub
-        artifact_url = "https://api.github.com/repos/lulu08-G/Dofus-app/actions/artifacts/2814294485/zip"
-        GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"] if "GITHUB_TOKEN" in st.secrets else None
+    def load_json_files(directory):
+        files = {}
+        for filename in os.listdir(directory):
+            if filename.endswith(".json"):
+                file_path = os.path.join(directory, filename)
+                with open(file_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                files[filename] = data
+        return files
+    
+    # Fonction pour afficher les résultats de manière paginée
+    def display_paginated_data(data, page_size=10, page_num=1):
+        start = (page_num - 1) * page_size
+        end = start + page_size
+        data_paginated = data[start:end]
         
-        if not GITHUB_TOKEN:
-            st.error("❌ Erreur : Token GitHub manquant.")
-            return
+        for idx, item in enumerate(data_paginated, start=start + 1):
+            st.write(f"**{idx}**: {item}")
         
-        headers = {
-            "Authorization": f"Bearer {GITHUB_TOKEN}",
-            "Accept": "application/vnd.github+json"
-        }
+        return len(data_paginated)
     
-        zip_path = "artifact.zip"
-        max_file_size = 3000 * 1024 * 1024  # 1000 MB (3 Go)
+    # Fonction pour rechercher dans les fichiers
+    def search_in_files(files, query):
+        results = {}
+        for file_name, data in files.items():
+            if isinstance(data, list):  # Si les données sont une liste (souvent le cas avec les fichiers JSON)
+                results[file_name] = [item for item in data if query.lower() in str(item).lower()]
+            elif isinstance(data, dict):  # Si les données sont un dictionnaire
+                results[file_name] = [item for item in data.items() if query.lower() in str(item).lower()]
+        return results
     
-        # 🎯 Vérification de la taille du fichier avant le téléchargement
-        st.write("🔄 Vérification de la taille du fichier...")
+    # Fonction principale pour l'interface Streamlit
+    def main():
+        st.title("📚 Navigateur de fichiers JSON")
+        st.write("Explorez les fichiers JSON extraits et recherchez des informations.")
     
-        try:
-            # Récupérer la taille du fichier via l'API GitHub
-            response = requests.head(artifact_url, headers=headers, allow_redirects=True)
-            if response.status_code == 200:
-                file_size = int(response.headers.get('Content-Length', 0))
-                st.write(f"📏 Taille du fichier : {file_size / (1024 * 1024):.2f} MB")
-                
-                if file_size > max_file_size:
-                    st.error(f"❌ Le fichier est trop gros ({file_size / (1024 * 1024):.2f} MB). Taille maximale autorisée : {max_file_size / (1024 * 1024):.2f} MB.")
-                    return
+        # Charger les fichiers JSON
+        directory = "resultats"  # Chemin vers le dossier contenant les fichiers JSON
+        files = load_json_files(directory)
+    
+        # Barre de recherche
+        query = st.text_input("🔍 Recherchez dans les fichiers JSON :", "")
+        
+        # Afficher les résultats de la recherche si une requête est donnée
+        if query:
+            st.subheader(f"Résultats pour '{query}' :")
+            search_results = search_in_files(files, query)
+            
+            if not any(search_results.values()):
+                st.write("❌ Aucune donnée correspondante trouvée.")
             else:
-                st.error(f"❌ Erreur lors de la récupération des informations sur le fichier : {response.status_code}")
-                return
-        except Exception as e:
-            st.error(f"❌ Erreur lors de la vérification de la taille : {e}")
-            return
+                for file_name, results in search_results.items():
+                    if results:
+                        st.write(f"**{file_name}**:")
+                        display_paginated_data(results, page_size=5, page_num=1)  # Affichage paginé
     
-        # 🎯 Démarrer le téléchargement
-        st.write("🔄 Téléchargement du fichier...")
+        # Sélectionner un fichier pour afficher son contenu
+        selected_file = st.selectbox("📁 Sélectionnez un fichier JSON à afficher :", list(files.keys()))
+        
+        # Si un fichier est sélectionné, afficher son contenu
+        if selected_file:
+            st.subheader(f"Contenu de {selected_file}:")
+            data = files[selected_file]
     
-        try:
-            with requests.get(artifact_url, headers=headers, stream=True, timeout=300) as response:
-                if response.status_code == 200:
-                    with open(zip_path, "wb") as file:
-                        for chunk in response.iter_content(chunk_size=8192):
-                            file.write(chunk)
-                    st.success(f"✅ Fichier téléchargé : {zip_path}")
-                    
-                    # 🎯 Décompresser l'archive
-                    st.write("✅ Décompression du fichier ZIP...")
+            # Si c'est une liste, on peut l'afficher sous forme de table
+            if isinstance(data, list):
+                df = pd.DataFrame(data)
+                st.dataframe(df)
+            elif isinstance(data, dict):  # Si c'est un dictionnaire
+                st.write(json.dumps(data, indent=2))
     
-                    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-                        zip_ref.extractall("resultats")  # Extraire dans le dossier 'resultats'
-                    st.write("✅ Artefact extrait avec succès.")
-                    
-                    # Lister les fichiers extraits
-                    files = os.listdir("resultats")
-                    st.write("📂 Contenu du dossier 'resultats' :", files)
-                else:
-                    st.error(f"❌ Erreur lors du téléchargement : {response.status_code}")
-                    st.write(response.text)  # Afficher la réponse de GitHub pour le débogage
-        except requests.exceptions.Timeout:
-            st.error("❌ Timeout pendant le téléchargement. L'opération a pris trop de temps.")
-        except Exception as e:
-            st.error(f"❌ Erreur pendant le téléchargement ou la décompression : {e}")
-
-    download_and_extract_artifact()
-
+        # Paginée : Si les données sont volumineuses
+        st.write("### Pages de résultats :")
+        if st.button('Afficher les pages suivantes'):
+            # Recharger ou mettre à jour la pagination
+            display_paginated_data(data, page_size=5, page_num=2)
+    
+    if __name__ == "__main__":
+        main()
     
 # ========================
 # Douda
