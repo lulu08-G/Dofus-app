@@ -363,129 +363,55 @@ elif page == "Page test":
 # PAGE DESIGNE
 # ========================
 elif page == "DESIGNE":
-    # CSS personnalisé
-    css = """
-    <style>
-        :root {
-            --font-main: "Lato", Arial, sans-serif;
-            --font-bold: "Lato Bold", Arial, sans-serif;
-            --font-size-xl: 1.5rem;
-            --font-size-l: 1.2rem;
-            --font-size-m: 1rem;
-            --font-size-s: 0.875rem;
-            --color-primary: #4a433b;
-            --color-secondary: #6aa84f;
-            --color-light: #f8f9fa;
-            --color-dark: #212529;
-            --color-text: #495057;
+
+    def download_and_extract_artifact():
+        st.write("🔄 Téléchargement de l'artefact en cours...")
+    
+        # 📌 Récupération du token GitHub
+        GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"] if "GITHUB_TOKEN" in st.secrets else None
+        if not GITHUB_TOKEN:
+            st.error("❌ Erreur : Token GitHub manquant.")
+            return
+        
+        headers = {
+            "Authorization": f"Bearer {GITHUB_TOKEN}",
+            "Accept": "application/vnd.github+json"
         }
-
-        body {
-            font-family: var(--font-main);
-            background-color: var(--color-light);
-            color: var(--color-text);
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        header {
-            background-color: var(--color-primary);
-            color: white;
-            padding: 1rem;
-            text-align: center;
-            font-size: var(--font-size-xl);
-        }
-
-        nav {
-            background-color: var(--color-secondary);
-            padding: 0.75rem;
-            display: flex;
-            justify-content: center;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: white;
-            font-size: var(--font-size-m);
-            padding: 0.5rem 1rem;
-            transition: background-color 0.3s;
-        }
-
-        nav a:hover {
-            background-color: var(--color-primary);
-        }
-
-        .main-content {
-            padding: 2rem;
-        }
-
-        .card {
-            background-color: var(--color-light);
-            border: 1px solid #e0e0e0;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
-        }
-
-        .card:hover {
-            transform: scale(1.05);
-        }
-
-        footer {
-            background-color: var(--color-primary);
-            color: white;
-            text-align: center;
-            padding: 1rem;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-        }
-    </style>
-    """
-
-    # HTML de la page
-    html = """
-    <header>
-        <h1>Bienvenue sur ma page</h1>
-    </header>
-
-    <nav>
-        <a href="#">Accueil</a>
-        <a href="#">À propos</a>
-        <a href="#">Services</a>
-        <a href="#">Contact</a>
-    </nav>
-
-    <div class="main-content">
-        <div class="card">
-            <h2>Card 1</h2>
-            <p>Ceci est un exemple de carte avec un peu de contenu pour montrer l'effet d'ombre et de survol.</p>
-        </div>
-
-        <div class="card">
-            <h2>Card 2</h2>
-            <p>Une autre carte, toujours avec un effet de survol qui l'agrandit légèrement.</p>
-        </div>
-
-        <div class="card">
-            <h2>Card 3</h2>
-            <p>Encore une carte, avec un texte explicatif pour tester l'espacement et la mise en page.</p>
-        </div>
-    </div>
-
-    <footer>
-        <p>&copy; 2025 Ma page avec style CSS personnalisé</p>
-    </footer>
-    """
-
-    # Injection CSS et HTML dans Streamlit
-    st.markdown(css, unsafe_allow_html=True)
-    st.markdown(html, unsafe_allow_html=True)
+    
+        # 📌 URL de téléchargement de l'artefact (API GitHub)
+        artifact_url = "https://api.github.com/repos/lulu08-G/Dofus-app/actions/artifacts/2814294485/zip"
+        
+        # 🔄 Télécharger l'artefact
+        response = requests.get(artifact_url, headers=headers)
+        
+        if response.status_code == 200:
+            st.write("✅ Téléchargement réussi, extraction en cours...")
+            
+            # 📌 Décompression
+            extract_path = "/tmp/resultats"  # 🔥 Utilisation de /tmp/ pour Streamlit dans un runner
+            os.makedirs(extract_path, exist_ok=True)  # Assure que le dossier existe
+            
+            with zipfile.ZipFile(io.BytesIO(response.content), 'r') as zip_ref:
+                zip_ref.extractall(extract_path)
+            
+            st.success("✅ Artefact extrait avec succès !")
+            
+            # 📂 Lister les fichiers extraits
+            files = os.listdir(extract_path)
+            st.write("📂 Fichiers extraits :", files)
+        
+        else:
+            st.error(f"❌ Erreur lors du téléchargement : {response.status_code}")
+            st.write(response.text)  # Afficher la réponse de GitHub pour debug
+    
+    # 🎯 Interface Streamlit
+    st.title("📥 Récupération des données Doduda")
+    
+    if st.button("🔄 Télécharger les données depuis GitHub Actions"):
+        download_and_extract_artifact()
 
 
-
+    
 # ========================
 # Douda
 # ========================
