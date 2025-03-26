@@ -380,7 +380,7 @@ elif page == "DESIGNE":
         }
     
         zip_path = "artifact.zip"
-        max_file_size = 1000 * 1024 * 1024  # 1000 MB (1 Go)
+        max_file_size = 3000 * 1024 * 1024  # 1000 MB (3 Go)
     
         # 🎯 Vérification de la taille du fichier avant le téléchargement
         st.write("🔄 Vérification de la taille du fichier...")
