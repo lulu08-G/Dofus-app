@@ -490,4 +490,17 @@ elif page == "DESIGNE":
 # Douda
 # ========================
 elif page == "dou":
+    def list_files(startpath):
+        for root, dirs, files in os.walk(startpath):
+            level = root.replace(startpath, '').count(os.sep)
+            indent = ' ' * 4 * (level)
+            st.write(f'{indent}{os.path.basename(root)}/')
+            subindent = ' ' * 4 * (level + 1)
+            for f in files:
+                st.write(f'{subindent}{f}')
     
+    # Chemin de départ à partir duquel lister les fichiers (par exemple, le répertoire actuel)
+    startpath = '.'
+    
+    st.title("Arborescence des fichiers")
+    list_files(startpath)
