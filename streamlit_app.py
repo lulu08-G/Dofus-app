@@ -363,86 +363,27 @@ elif page == "Page test":
 # PAGE DESIGNE
 # ========================
 elif page == "DESIGNE":
-    def load_json_files(directory):
-        files = {}
-        for filename in os.listdir(directory):
-            if filename.endswith(".json"):
-                file_path = os.path.join(directory, filename)
-                with open(file_path, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-                files[filename] = data
-        return files
+    # Dossier contenant les fichiers JSON
+    resultats_directory = 'resultats'
     
-    # Fonction pour afficher les résultats de manière paginée
-    def display_paginated_data(data, page_size=10, page_num=1):
-        start = (page_num - 1) * page_size
-        end = start + page_size
-        data_paginated = data[start:end]
+    # Fonction pour lister les fichiers JSON
+    def list_json_files(directory):
+        return [f for f in os.listdir(directory) if f.endswith('.json')]
+    
+    # Liste des fichiers JSON dans le dossier
+    json_files = list_json_files(resultats_directory)
+    
+    # Sélectionner un fichier JSON dans la liste
+    file_selection = st.selectbox("Sélectionner un fichier JSON", json_files)
+    
+    # Afficher le contenu du fichier JSON sélectionné
+    if file_selection:
+        file_path = os.path.join(resultats_directory, file_selection)
+        with open(file_path, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+            # Afficher une partie des données pour éviter un trop grand affichage
+            st.json(data[:5])  # Affiche seulement les 5 premiers éléments, ou ajustez à votre convenance
         
-        for idx, item in enumerate(data_paginated, start=start + 1):
-            st.write(f"**{idx}**: {item}")
-        
-        return len(data_paginated)
-    
-    # Fonction pour rechercher dans les fichiers
-    def search_in_files(files, query):
-        results = {}
-        for file_name, data in files.items():
-            if isinstance(data, list):  # Si les données sont une liste (souvent le cas avec les fichiers JSON)
-                results[file_name] = [item for item in data if query.lower() in str(item).lower()]
-            elif isinstance(data, dict):  # Si les données sont un dictionnaire
-                results[file_name] = [item for item in data.items() if query.lower() in str(item).lower()]
-        return results
-    
-    # Fonction principale pour l'interface Streamlit
-    def main():
-        st.title("📚 Navigateur de fichiers JSON")
-        st.write("Explorez les fichiers JSON extraits et recherchez des informations.")
-    
-        # Charger les fichiers JSON
-        directory = "resultats"  # Chemin vers le dossier contenant les fichiers JSON
-        files = load_json_files(directory)
-    
-        # Barre de recherche
-        query = st.text_input("🔍 Recherchez dans les fichiers JSON :", "")
-        
-        # Afficher les résultats de la recherche si une requête est donnée
-        if query:
-            st.subheader(f"Résultats pour '{query}' :")
-            search_results = search_in_files(files, query)
-            
-            if not any(search_results.values()):
-                st.write("❌ Aucune donnée correspondante trouvée.")
-            else:
-                for file_name, results in search_results.items():
-                    if results:
-                        st.write(f"**{file_name}**:")
-                        display_paginated_data(results, page_size=5, page_num=1)  # Affichage paginé
-    
-        # Sélectionner un fichier pour afficher son contenu
-        selected_file = st.selectbox("📁 Sélectionnez un fichier JSON à afficher :", list(files.keys()))
-        
-        # Si un fichier est sélectionné, afficher son contenu
-        if selected_file:
-            st.subheader(f"Contenu de {selected_file}:")
-            data = files[selected_file]
-    
-            # Si c'est une liste, on peut l'afficher sous forme de table
-            if isinstance(data, list):
-                df = pd.DataFrame(data)
-                st.dataframe(df)
-            elif isinstance(data, dict):  # Si c'est un dictionnaire
-                st.write(json.dumps(data, indent=2))
-    
-        # Paginée : Si les données sont volumineuses
-        st.write("### Pages de résultats :")
-        if st.button('Afficher les pages suivantes'):
-            # Recharger ou mettre à jour la pagination
-            display_paginated_data(data, page_size=5, page_num=2)
-    
-    if __name__ == "__main__":
-        main()
-    
 # ========================
 # Douda
 # ========================
