@@ -363,6 +363,8 @@ elif page == "Page test":
 # PAGE DESIGNE
 # ========================
 elif page == "DESIGNE":
+    st.title("Page DESIGNE")
+    download_and_extract_artifact()
 
     def download_and_extract_artifact():
         # Lien vers l'artefact GitHub
