@@ -397,6 +397,13 @@ elif page == "DESIGNE":
                 except Exception as e:
                     # Gère les erreurs lors du chargement du fichier JSON
                     st.error(f"Erreur lors du chargement du fichier {selected_file}: {e}")
+
+    key_selected = st.selectbox("Choisir une clé dans 'objectsById'", list(data['objectsById']['m_keys'].keys()))
+    value_selected = data['objectsById']['m_values'].get(key_selected)
+    
+    if value_selected:
+        st.subheader(f"Détails de l'objet : {key_selected}")
+        st.write(value_selected)
 # ========================
 # Douda
 # ========================
