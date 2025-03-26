@@ -363,19 +363,40 @@ elif page == "Page test":
 # PAGE DESIGNE
 # ========================
 elif page == "DESIGNE":
-    # Exemple de recherche dans un fichier JSON
-    search_query = st.text_input("Recherche", "")
+    # Répertoire où les fichiers JSON sont extraits
+    directory = "resultats"  # Vérifie si le répertoire existe et contient des fichiers JSON
     
-    if search_query:
-        result = []
-        for file_name in json_files:
-            with open(os.path.join(directory, file_name), 'r') as f:
-                data = json.load(f)
-                # Chercher dans les données
-                if any(search_query.lower() in str(val).lower() for val in data.values()):
-                    result.append(file_name)
-        
-        st.write(f"Fichiers trouvés pour '{search_query}':", result)
+    # Vérifie si le répertoire existe
+    if not os.path.exists(directory):
+        st.error(f"Le répertoire {directory} n'existe pas. Vérifie le téléchargement des données.")
+    else:
+        # Récupère tous les fichiers JSON dans le répertoire
+        json_files = [f for f in os.listdir(directory) if f.endswith('.json')]
+    
+        # Vérifie si des fichiers JSON ont été trouvés
+        if not json_files:
+            st.warning(f"Aucun fichier JSON trouvé dans le répertoire {directory}.")
+        else:
+            st.title("📂 Liste des fichiers JSON")
+            st.write(f"Il y a {len(json_files)} fichiers JSON dans le répertoire {directory}.")
+    
+            # Affiche les fichiers JSON dans l'interface
+            selected_file = st.selectbox("Choisir un fichier JSON", json_files)
+    
+            # Affiche le contenu du fichier JSON sélectionné
+            if selected_file:
+                file_path = os.path.join(directory, selected_file)
+                try:
+                    # Ouvre et charge le fichier JSON
+                    with open(file_path, 'r') as file:
+                        data = json.load(file)
+                    
+                    # Affiche les données du fichier JSON
+                    st.json(data)
+                    
+                except Exception as e:
+                    # Gère les erreurs lors du chargement du fichier JSON
+                    st.error(f"Erreur lors du chargement du fichier {selected_file}: {e}")
 # ========================
 # Douda
 # ========================
