@@ -363,26 +363,19 @@ elif page == "Page test":
 # PAGE DESIGNE
 # ========================
 elif page == "DESIGNE":
-    def load_json_file(file_path):
-        with open(file_path, 'r', encoding='utf-8') as file:
-            return json.load(file)
-    
-    # Filtrer les données basées sur un mot-clé
-    def filter_json_data(data, keyword):
-        return [item for item in data if keyword.lower() in str(item).lower()]
-    
-    # Afficher la recherche
-    file_path = "resultats/quests.json"
-    data = load_json_file(file_path)
-    
-    # Champ de recherche
-    search_query = st.text_input("Rechercher dans les données")
+    # Exemple de recherche dans un fichier JSON
+    search_query = st.text_input("Recherche", "")
     
     if search_query:
-        filtered_data = filter_json_data(data, search_query)
-        st.json(filtered_data)
-    else:
-        st.json(data[:10])  # Affiche les 10 premiers éléments si aucune recherche
+        result = []
+        for file_name in json_files:
+            with open(os.path.join(directory, file_name), 'r') as f:
+                data = json.load(f)
+                # Chercher dans les données
+                if any(search_query.lower() in str(val).lower() for val in data.values()):
+                    result.append(file_name)
+        
+        st.write(f"Fichiers trouvés pour '{search_query}':", result)
 # ========================
 # Douda
 # ========================
