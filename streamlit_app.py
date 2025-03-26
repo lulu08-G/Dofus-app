@@ -364,7 +364,6 @@ elif page == "Page test":
 # ========================
 elif page == "DESIGNE":
     st.title("Page DESIGNE")
-    download_and_extract_artifact()
 
     def download_and_extract_artifact():
         # Lien vers l'artefact GitHub
@@ -431,7 +430,8 @@ elif page == "DESIGNE":
             st.error("❌ Timeout pendant le téléchargement. L'opération a pris trop de temps.")
         except Exception as e:
             st.error(f"❌ Erreur pendant le téléchargement ou la décompression : {e}")
-    
+
+    download_and_extract_artifact()
 
     
 # ========================
