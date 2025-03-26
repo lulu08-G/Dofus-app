@@ -364,48 +364,24 @@ elif page == "Page test":
 # ========================
 elif page == "DESIGNE":
 
-    def download_and_extract_artifact():
-        st.write("🔄 Téléchargement de l'artefact en cours...")
+    artifact_url = "https://api.github.com/repos/lulu08-G/Dofus-app/actions/artifacts/2814294485/zip"
+    headers = {
+        "Authorization": f"Bearer {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github+json"
+    }
     
-        # 📌 Récupération du token GitHub
-        GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"] if "GITHUB_TOKEN" in st.secrets else None
-        if not GITHUB_TOKEN:
-            st.error("❌ Erreur : Token GitHub manquant.")
-            return
-        
-        headers = {
-            "Authorization": f"Bearer {GITHUB_TOKEN}",
-            "Accept": "application/vnd.github+json"
-        }
+    zip_path = "artifact.zip"
     
-        # 📌 URL de téléchargement de l'artefact (API GitHub)
-        artifact_url = "https://api.github.com/repos/lulu08-G/Dofus-app/actions/artifacts/2814294485/zip"
-        
-        # 🔄 Télécharger l'artefact
-        response = requests.get(artifact_url, headers=headers)
-        
+    with requests.get(artifact_url, headers=headers, stream=True) as response:
         if response.status_code == 200:
-            st.write("✅ Téléchargement réussi, extraction en cours...")
-            
-            # 📌 Décompression
-            extract_path = "/tmp/resultats"  # 🔥 Utilisation de /tmp/ pour Streamlit dans un runner
-            os.makedirs(extract_path, exist_ok=True)  # Assure que le dossier existe
-            
-            with zipfile.ZipFile(io.BytesIO(response.content), 'r') as zip_ref:
-                zip_ref.extractall(extract_path)
-            
-            st.success("✅ Artefact extrait avec succès !")
-            
-            # 📂 Lister les fichiers extraits
-            files = os.listdir(extract_path)
-            st.write("📂 Fichiers extraits :", files)
-        
+            with open(zip_path, "wb") as file:
+                for chunk in response.iter_content(chunk_size=8192):
+                    file.write(chunk)
+            print(f"✅ Fichier téléchargé : {zip_path}")
         else:
-            st.error(f"❌ Erreur lors du téléchargement : {response.status_code}")
-            st.write(response.text)  # Afficher la réponse de GitHub pour debug
-    
-    # 🎯 Interface Streamlit
-    st.title("📥 Récupération des données Doduda")
+            print(f"❌ Erreur lors du téléchargement : {response.status_code}")
+        # 🎯 Interface Streamlit
+        st.title("📥 Récupération des données Doduda")
     
     if st.button("🔄 Télécharger les données depuis GitHub Actions"):
         download_and_extract_artifact()
