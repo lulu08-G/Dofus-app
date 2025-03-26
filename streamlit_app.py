@@ -447,17 +447,72 @@ elif page == "DESIGNE":
 # Douda
 # ========================
 elif page == "dou":
-    def list_files(startpath):
-        for root, dirs, files in os.walk(startpath):
-            level = root.replace(startpath, '').count(os.sep)
-            indent = ' ' * 4 * (level)
-            st.write(f'{indent}{os.path.basename(root)}/')
-            subindent = ' ' * 4 * (level + 1)
-            for f in files:
-                st.write(f'{subindent}{f}')
+    st.title("Page DESIGNE")
+
+    def download_and_extract_artifact():
+        # Lien vers l'artefact GitHub
+        artifact_url = "https://api.github.com/repos/lulu08-G/Dofus-app/actions/artifacts/2814294485/zip"
+        GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"] if "GITHUB_TOKEN" in st.secrets else None
+        
+        if not GITHUB_TOKEN:
+            st.error("❌ Erreur : Token GitHub manquant.")
+            return
+        
+        headers = {
+            "Authorization": f"Bearer {GITHUB_TOKEN}",
+            "Accept": "application/vnd.github+json"
+        }
     
-    # Chemin de départ à partir duquel lister les fichiers (par exemple, le répertoire actuel)
-    startpath = '.'
+        zip_path = "artifact.zip"
+        max_file_size = 3000 * 1024 * 1024  # 1000 MB (3 Go)
     
-    st.title("Arborescence des fichiers")
-    list_files(startpath)
+        # 🎯 Vérification de la taille du fichier avant le téléchargement
+        st.write("🔄 Vérification de la taille du fichier...")
+    
+        try:
+            # Récupérer la taille du fichier via l'API GitHub
+            response = requests.head(artifact_url, headers=headers, allow_redirects=True)
+            if response.status_code == 200:
+                file_size = int(response.headers.get('Content-Length', 0))
+                st.write(f"📏 Taille du fichier : {file_size / (1024 * 1024):.2f} MB")
+                
+                if file_size > max_file_size:
+                    st.error(f"❌ Le fichier est trop gros ({file_size / (1024 * 1024):.2f} MB). Taille maximale autorisée : {max_file_size / (1024 * 1024):.2f} MB.")
+                    return
+            else:
+                st.error(f"❌ Erreur lors de la récupération des informations sur le fichier : {response.status_code}")
+                return
+        except Exception as e:
+            st.error(f"❌ Erreur lors de la vérification de la taille : {e}")
+            return
+    
+        # 🎯 Démarrer le téléchargement
+        st.write("🔄 Téléchargement du fichier...")
+    
+        try:
+            with requests.get(artifact_url, headers=headers, stream=True, timeout=300) as response:
+                if response.status_code == 200:
+                    with open(zip_path, "wb") as file:
+                        for chunk in response.iter_content(chunk_size=8192):
+                            file.write(chunk)
+                    st.success(f"✅ Fichier téléchargé : {zip_path}")
+                    
+                    # 🎯 Décompresser l'archive
+                    st.write("✅ Décompression du fichier ZIP...")
+    
+                    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+                        zip_ref.extractall("resultats")  # Extraire dans le dossier 'resultats'
+                    st.write("✅ Artefact extrait avec succès.")
+                    
+                    # Lister les fichiers extraits
+                    files = os.listdir("resultats")
+                    st.write("📂 Contenu du dossier 'resultats' :", files)
+                else:
+                    st.error(f"❌ Erreur lors du téléchargement : {response.status_code}")
+                    st.write(response.text)  # Afficher la réponse de GitHub pour le débogage
+        except requests.exceptions.Timeout:
+            st.error("❌ Timeout pendant le téléchargement. L'opération a pris trop de temps.")
+        except Exception as e:
+            st.error(f"❌ Erreur pendant le téléchargement ou la décompression : {e}")
+
+    download_and_extract_artifact()
