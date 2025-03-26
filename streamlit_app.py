@@ -363,30 +363,26 @@ elif page == "Page test":
 # PAGE DESIGNE
 # ========================
 elif page == "DESIGNE":
-    # Charger un fichier JSON
     def load_json_file(file_path):
         with open(file_path, 'r', encoding='utf-8') as file:
             return json.load(file)
     
-    # Exemple de fonction pour afficher une pagination des données
-    def display_json_with_pagination(data, page_size=10):
-        # Nombre total de pages
-        total_pages = len(data) // page_size + 1
-        page_number = st.number_input("Page", min_value=1, max_value=total_pages, step=1)
-        
-        # Calculer l'index de début et de fin pour la pagination
-        start_idx = (page_number - 1) * page_size
-        end_idx = start_idx + page_size
-        page_data = data[start_idx:end_idx]
-        
-        # Afficher la page de données
-        st.json(page_data)
+    # Filtrer les données basées sur un mot-clé
+    def filter_json_data(data, keyword):
+        return [item for item in data if keyword.lower() in str(item).lower()]
     
-    # Exemple d'utilisation
+    # Afficher la recherche
     file_path = "resultats/quests.json"
     data = load_json_file(file_path)
-    display_json_with_pagination(data)
-        
+    
+    # Champ de recherche
+    search_query = st.text_input("Rechercher dans les données")
+    
+    if search_query:
+        filtered_data = filter_json_data(data, search_query)
+        st.json(filtered_data)
+    else:
+        st.json(data[:10])  # Affiche les 10 premiers éléments si aucune recherche
 # ========================
 # Douda
 # ========================
