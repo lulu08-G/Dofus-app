@@ -387,7 +387,7 @@ elif page == "DESIGNE":
     
         try:
             # Récupérer la taille du fichier via l'API GitHub
-            response = requests.head(artifact_url, headers=headers)
+            response = requests.head(artifact_url, headers=headers, allow_redirects=True)
             if response.status_code == 200:
                 file_size = int(response.headers.get('Content-Length', 0))
                 st.write(f"📏 Taille du fichier : {file_size / (1024 * 1024):.2f} MB")
