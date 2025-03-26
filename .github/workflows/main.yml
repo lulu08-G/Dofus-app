@@ -1,4 +1,4 @@
-name: Exécution de Doduda
+name: Exécution dezip
 
 on:
   workflow_dispatch:
