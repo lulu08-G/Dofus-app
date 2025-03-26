@@ -1,4 +1,4 @@
-name: Exécution dezip
+name: Exécution de Doduda
 
 on:
   workflow_dispatch:
@@ -11,7 +11,17 @@ jobs:
     - name: Checkout du code du dépôt
       uses: actions/checkout@v2
 
+    - name: Télécharger le binaire doduda
+      run: |
+        curl -s https://get.dofusdu.de/doduda | sh
 
+    - name: Télécharger les données Dofus
+      run: |
+        # 1. Télécharge les données nécessaires dans le dossier ./resultats
+        doduda --output ./resultats
+        
+        # 2. Exécute le map après avoir téléchargé les fichiers
+        doduda map --output ./resultats
 
     - name: Upload des résultats en tant qu'artefact
       uses: actions/upload-artifact@v4
