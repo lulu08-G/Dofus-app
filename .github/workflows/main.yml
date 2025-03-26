@@ -3,6 +3,8 @@ name: Exécution de Doduda
 on:
   workflow_dispatch:
 
+jobs:
+
 display_results:
     runs-on: ubuntu-latest
     needs: run_doduda
