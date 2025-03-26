@@ -363,26 +363,29 @@ elif page == "Page test":
 # PAGE DESIGNE
 # ========================
 elif page == "DESIGNE":
-    # Dossier contenant les fichiers JSON
-    resultats_directory = 'resultats'
-    
-    # Fonction pour lister les fichiers JSON
-    def list_json_files(directory):
-        return [f for f in os.listdir(directory) if f.endswith('.json')]
-    
-    # Liste des fichiers JSON dans le dossier
-    json_files = list_json_files(resultats_directory)
-    
-    # Sélectionner un fichier JSON dans la liste
-    file_selection = st.selectbox("Sélectionner un fichier JSON", json_files)
-    
-    # Afficher le contenu du fichier JSON sélectionné
-    if file_selection:
-        file_path = os.path.join(resultats_directory, file_selection)
+    # Charger un fichier JSON
+    def load_json_file(file_path):
         with open(file_path, 'r', encoding='utf-8') as file:
-            data = json.load(file)
-            # Afficher une partie des données pour éviter un trop grand affichage
-            st.json(data[:5])  # Affiche seulement les 5 premiers éléments, ou ajustez à votre convenance
+            return json.load(file)
+    
+    # Exemple de fonction pour afficher une pagination des données
+    def display_json_with_pagination(data, page_size=10):
+        # Nombre total de pages
+        total_pages = len(data) // page_size + 1
+        page_number = st.number_input("Page", min_value=1, max_value=total_pages, step=1)
+        
+        # Calculer l'index de début et de fin pour la pagination
+        start_idx = (page_number - 1) * page_size
+        end_idx = start_idx + page_size
+        page_data = data[start_idx:end_idx]
+        
+        # Afficher la page de données
+        st.json(page_data)
+    
+    # Exemple d'utilisation
+    file_path = "resultats/quests.json"
+    data = load_json_file(file_path)
+    display_json_with_pagination(data)
         
 # ========================
 # Douda
