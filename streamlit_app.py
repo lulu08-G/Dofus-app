@@ -18,64 +18,46 @@ st.set_page_config(
 # ========================
 # MENU DE NAVIGATION
 # ========================
-st.sidebar.title("🔀 Navigation")
-page = st.sidebar.radio("Aller à :", ["Accueil", "Test Image Item"])
-
-# ========================
-# PAGE ACCUEIL
-# ========================
-if page == "Accueil":
-    st.title("🔨 Craft Dofus 🔨")
-    # 📂 Définir le dossier racine à explorer
-    ROOT_DIR = "/mount/src/dofus-app/resultats"  # Mets ton chemin ici
+    st.sidebar.title("🔀 Navigation")
+    page = st.sidebar.radio("Aller à :", ["Accueil", "Test Image Item"])
     
-    # ⏳ Vérifier si le dossier existe
-    if not os.path.exists(ROOT_DIR):
-        st.error(f"❌ Le dossier '{ROOT_DIR}' n'existe pas !")
+    # ========================
+    # PAGE ACCUEIL
+    # ========================
+    if page == "Accueil":
+    st.title("📂 Recherche du dossier 'resultats'")
+    
+    # 🔄 Explorer les répertoires connus
+    base_dirs = ["/mount/src", "/tmp", "/cache", "/home/adminuser"]
+    
+    found_paths = []
+    
+    for base in base_dirs:
+        for root, dirs, files in os.walk(base):
+            if "resultats" in dirs:
+                found_paths.append(os.path.join(root, "resultats"))
+    
+    if found_paths:
+        st.success(f"✅ Dossier trouvé ! Chemins possibles :")
+        for path in found_paths:
+            st.write(f"📍 `{path}`")
     else:
-        st.title("📂 Explorateur de fichiers")
+        st.error("❌ Impossible de trouver le dossier 'resultats'.")
     
-        # 🔍 Recherche de fichiers
-        search_query = st.text_input("🔎 Rechercher un fichier :", "")
+    # 🔍 Vérifier la présence de 'items.json'
+    items_json_paths = []
     
-        # 📁 Naviguer dans les sous-dossiers
-        current_dir = st.session_state.get("current_dir", ROOT_DIR)
-        
-        if st.button("⬆ Retour au dossier parent") and current_dir != ROOT_DIR:
-            current_dir = os.path.dirname(current_dir)
-            st.session_state["current_dir"] = current_dir
+    for base in base_dirs:
+        for root, _, files in os.walk(base):
+            if "items.json" in files:
+                items_json_paths.append(os.path.join(root, "items.json"))
     
-        st.write(f"📌 Chemin actuel : `{current_dir}`")
-    
-        # Lister les fichiers et dossiers
-        files = []
-        folders = []
-    
-        for item in os.listdir(current_dir):
-            full_path = os.path.join(current_dir, item)
-            if os.path.isdir(full_path):
-                folders.append(item)
-            else:
-                files.append(item)
-    
-        # 🔍 Filtrer les fichiers selon la recherche
-        if search_query:
-            files = [f for f in files if search_query.lower() in f.lower()]
-            folders = [f for f in folders if search_query.lower() in f.lower()]
-    
-        # 📁 Afficher les dossiers
-        for folder in folders:
-            if st.button(f"📂 {folder}"):
-                st.session_state["current_dir"] = os.path.join(current_dir, folder)
-                st.rerun()
-    
-        # 📜 Afficher les fichiers
-        for file in files:
-            file_path = os.path.join(current_dir, file)
-            if st.button(f"📄 {file}"):
-                st.write(f"📍 **Chemin du fichier** : `{file_path}`")
-                with open(file_path, "r", encoding="utf-8") as f:
-                    st.text_area("📜 Contenu :", f.read(), height=300)
+    if items_json_paths:
+        st.success("✅ Fichier 'items.json' trouvé !")
+        for path in items_json_paths:
+            st.write(f"📍 `{path}`")
+    else:
+        st.error("❌ 'items.json' introuvable !")
 
 # ========================
 # PAGE TEST IMAGE ITEM
