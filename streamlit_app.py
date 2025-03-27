@@ -19,56 +19,56 @@ st.set_page_config(
 # MENU DE NAVIGATION
 # ========================
 
-# 📂 Définir le dossier racine à explorer
-ROOT_DIR = "/mount/src/dofus-app/resultats"  # Mets ton chemin ici
-
-# ⏳ Vérifier si le dossier existe
-if not os.path.exists(ROOT_DIR):
-    st.error(f"❌ Le dossier '{ROOT_DIR}' n'existe pas !")
-else:
-    st.title("📂 Explorateur de fichiers")
-
-    # 🔍 Recherche de fichiers
-    search_query = st.text_input("🔎 Rechercher un fichier :", "")
-
-    # 📁 Naviguer dans les sous-dossiers
-    current_dir = st.session_state.get("current_dir", ROOT_DIR)
+    # 📂 Définir le dossier racine à explorer
+    ROOT_DIR = "/mount/src/dofus-app/resultats"  # Mets ton chemin ici
     
-    if st.button("⬆ Retour au dossier parent") and current_dir != ROOT_DIR:
-        current_dir = os.path.dirname(current_dir)
-        st.session_state["current_dir"] = current_dir
-
-    st.write(f"📌 Chemin actuel : `{current_dir}`")
-
-    # Lister les fichiers et dossiers
-    files = []
-    folders = []
-
-    for item in os.listdir(current_dir):
-        full_path = os.path.join(current_dir, item)
-        if os.path.isdir(full_path):
-            folders.append(item)
-        else:
-            files.append(item)
-
-    # 🔍 Filtrer les fichiers selon la recherche
-    if search_query:
-        files = [f for f in files if search_query.lower() in f.lower()]
-        folders = [f for f in folders if search_query.lower() in f.lower()]
-
-    # 📁 Afficher les dossiers
-    for folder in folders:
-        if st.button(f"📂 {folder}"):
-            st.session_state["current_dir"] = os.path.join(current_dir, folder)
-            st.rerun()
-
-    # 📜 Afficher les fichiers
-    for file in files:
-        file_path = os.path.join(current_dir, file)
-        if st.button(f"📄 {file}"):
-            st.write(f"📍 **Chemin du fichier** : `{file_path}`")
-            with open(file_path, "r", encoding="utf-8") as f:
-                st.text_area("📜 Contenu :", f.read(), height=300)
+    # ⏳ Vérifier si le dossier existe
+    if not os.path.exists(ROOT_DIR):
+        st.error(f"❌ Le dossier '{ROOT_DIR}' n'existe pas !")
+    else:
+        st.title("📂 Explorateur de fichiers")
+    
+        # 🔍 Recherche de fichiers
+        search_query = st.text_input("🔎 Rechercher un fichier :", "")
+    
+        # 📁 Naviguer dans les sous-dossiers
+        current_dir = st.session_state.get("current_dir", ROOT_DIR)
+        
+        if st.button("⬆ Retour au dossier parent") and current_dir != ROOT_DIR:
+            current_dir = os.path.dirname(current_dir)
+            st.session_state["current_dir"] = current_dir
+    
+        st.write(f"📌 Chemin actuel : `{current_dir}`")
+    
+        # Lister les fichiers et dossiers
+        files = []
+        folders = []
+    
+        for item in os.listdir(current_dir):
+            full_path = os.path.join(current_dir, item)
+            if os.path.isdir(full_path):
+                folders.append(item)
+            else:
+                files.append(item)
+    
+        # 🔍 Filtrer les fichiers selon la recherche
+        if search_query:
+            files = [f for f in files if search_query.lower() in f.lower()]
+            folders = [f for f in folders if search_query.lower() in f.lower()]
+    
+        # 📁 Afficher les dossiers
+        for folder in folders:
+            if st.button(f"📂 {folder}"):
+                st.session_state["current_dir"] = os.path.join(current_dir, folder)
+                st.rerun()
+    
+        # 📜 Afficher les fichiers
+        for file in files:
+            file_path = os.path.join(current_dir, file)
+            if st.button(f"📄 {file}"):
+                st.write(f"📍 **Chemin du fichier** : `{file_path}`")
+                with open(file_path, "r", encoding="utf-8") as f:
+                    st.text_area("📜 Contenu :", f.read(), height=300)
 
 # ========================
 # PAGE TEST IMAGE ITEM
