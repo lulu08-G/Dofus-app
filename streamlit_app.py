@@ -19,7 +19,7 @@ st.set_page_config(
 # MENU DE NAVIGATION
 # ========================
 st.sidebar.title("🔀 Navigation")
-    page = st.sidebar.radio("Aller à :", ["Accueil", "Test Image Item"])
+page = st.sidebar.radio("Aller à :", ["Accueil", "Test Image Item"])
  # ========================
 # PAGE ACCUEIL
 # ========================
