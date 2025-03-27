@@ -365,7 +365,7 @@ elif page == "Page test":
 elif page == "DESIGNE":
         # Charger les données JSON (remplace "items.json" par le bon fichier)
 
-        with open("/mount/tmp/resultats/items.json", "r", encoding="utf-8") as file:
+            with open("mount/tmp/resultats/items.json", "r", encoding="utf-8") as file:
             return json.load(file)
     
     # Interface Streamlit
