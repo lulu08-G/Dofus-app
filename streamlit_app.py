@@ -18,132 +18,57 @@ st.set_page_config(
 # ========================
 # MENU DE NAVIGATION
 # ========================
-st.sidebar.title("🔀 Navigation")
-page = st.sidebar.radio("Aller à :", ["Accueil", "Test Image Item", "Page test", "DESIGNE", "dou"])
 
-# ========================
-# PAGE ACCUEIL
-# ========================
-if page == "Accueil":
-    st.title("🔨 Craft Dofus 🔨")
+# 📂 Définir le dossier racine à explorer
+ROOT_DIR = "/mount/src/dofus-app/resultats"  # Mets ton chemin ici
 
-    # Recherche d'un item
-    search_query = st.text_input("Recherche d'un équipement :", "")
+# ⏳ Vérifier si le dossier existe
+if not os.path.exists(ROOT_DIR):
+    st.error(f"❌ Le dossier '{ROOT_DIR}' n'existe pas !")
+else:
+    st.title("📂 Explorateur de fichiers")
 
-    def search_items(query):
-        if not query:
-            return []
+    # 🔍 Recherche de fichiers
+    search_query = st.text_input("🔎 Rechercher un fichier :", "")
 
-        params = {
-            "query": query,
-            "limit": 5
-        }
+    # 📁 Naviguer dans les sous-dossiers
+    current_dir = st.session_state.get("current_dir", ROOT_DIR)
+    
+    if st.button("⬆ Retour au dossier parent") and current_dir != ROOT_DIR:
+        current_dir = os.path.dirname(current_dir)
+        st.session_state["current_dir"] = current_dir
 
-        url = "https://api.dofusdu.de/dofus3/v1/fr/items/equipment/search"
-        response = requests.get(url, params=params)
+    st.write(f"📌 Chemin actuel : `{current_dir}`")
 
-        if response.status_code == 200:
-            try:
-                return response.json()  # La réponse est directement une liste d'items
-            except json.JSONDecodeError:
-                st.error("Erreur de formatage JSON : la réponse de l'API n'est pas un JSON valide.")
-                st.text(response.text)  # Afficher la réponse brute pour déboguer
-                return []
+    # Lister les fichiers et dossiers
+    files = []
+    folders = []
+
+    for item in os.listdir(current_dir):
+        full_path = os.path.join(current_dir, item)
+        if os.path.isdir(full_path):
+            folders.append(item)
         else:
-            st.error(f"Erreur API : {response.status_code}")
-            return []
+            files.append(item)
 
-    def get_item_details(ankama_id):
-        url = f"https://api.dofusdu.de/dofus3/v1/fr/items/equipment/{ankama_id}"
-        response = requests.get(url)
-
-        if response.status_code == 200:
-            try:
-                return response.json()
-            except json.JSONDecodeError:
-                st.error("Erreur de formatage JSON : la réponse de l'API n'est pas un JSON valide.")
-                st.text(response.text)
-                return {}
-        else:
-            st.error(f"Erreur API : {response.status_code}")
-            return {}
-
-    def show_recipe(recipe):
-        if not recipe:
-            st.warning("❌ Pas de recette pour cet item.")
-            return
-
-        st.success("✅ Recette disponible !")
-        for ingredient in recipe:
-            item_id = ingredient['item_ankama_id']
-            quantity = ingredient['quantity']
-            subtype = ingredient['item_subtype']
-
-            # Afficher les détails de chaque ingrédient
-            st.markdown(f"➡️ **{quantity}x** [Item ID : `{item_id}`] - Type : {subtype}")
-
-    def show_item_stats(item):
-        st.subheader(f"📊 Statistiques de {item['name']}")
-        stats = item.get('effects', [])
-
-        if not stats:
-            st.warning("Aucune statistique disponible pour cet item.")
-            return
-
-        data = []
-        for stat in stats:
-            stat_type = stat['type']['name']
-            min_value = stat.get('int_minimum', 'N/A')
-            max_value = stat.get('int_maximum', 'N/A')
-            formatted = stat.get('formatted', 'N/A')
-
-            data.append([stat_type, min_value, max_value, formatted])
-
-        if data:
-            st.table(data)
-
+    # 🔍 Filtrer les fichiers selon la recherche
     if search_query:
-        items = search_items(search_query)
+        files = [f for f in files if search_query.lower() in f.lower()]
+        folders = [f for f in folders if search_query.lower() in f.lower()]
 
-        if not items:
-            st.warning("Aucun résultat trouvé pour cette recherche.")
-        else:
-            st.subheader("📋 Résultats :")
+    # 📁 Afficher les dossiers
+    for folder in folders:
+        if st.button(f"📂 {folder}"):
+            st.session_state["current_dir"] = os.path.join(current_dir, folder)
+            st.rerun()
 
-            for item in items:
-                if 'name' in item and 'level' in item:
-                    with st.expander(f"{item['name']} (Lvl {item['level']})"):
-                        col1, col2 = st.columns([1, 3])
-
-                        with col1:
-                            st.image(item['image_urls']['icon'], width=80)
-
-                        with col2:
-                            st.markdown(f"**Nom :** {item['name']}")
-                            st.markdown(f"**Niveau :** {item['level']}")
-                            st.markdown(f"**Type :** {item['type']['name']}")
-                            st.markdown(f"**Description :** {item.get('description', 'Aucune description disponible.')}")
-
-                        item_details = get_item_details(item['ankama_id'])
-
-                        if 'recipe' in item_details and item_details['recipe']:
-                            st.markdown("---")
-                            st.markdown("### 🧪 Recette de craft :")
-                            show_recipe(item_details['recipe'])
-                        else:
-                            st.info("Pas de recette disponible pour cet item.")
-
-                        show_item_stats(item_details)
-
-                        st.markdown("### Informations supplémentaires :")
-                        st.markdown(f"**Pods :** {item_details.get('pods', 'N/A')}")
-                        st.markdown(f"**Conditions :** {item_details.get('conditions', 'Aucune condition disponible.')}")
-                        st.markdown(f"**Equipement :** {item_details.get('is_weapon', 'N/A')}")
-                        st.markdown(f"**Critiques :** Probabilité critique : {item_details.get('critical_hit_probability', 'N/A')}%")
-
-                else:
-                    st.warning("Item incomplet :")
-                    st.json(item)
+    # 📜 Afficher les fichiers
+    for file in files:
+        file_path = os.path.join(current_dir, file)
+        if st.button(f"📄 {file}"):
+            st.write(f"📍 **Chemin du fichier** : `{file_path}`")
+            with open(file_path, "r", encoding="utf-8") as f:
+                st.text_area("📜 Contenu :", f.read(), height=300)
 
 # ========================
 # PAGE TEST IMAGE ITEM
