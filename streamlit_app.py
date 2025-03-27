@@ -363,47 +363,36 @@ elif page == "Page test":
 # PAGE DESIGNE
 # ========================
 elif page == "DESIGNE":
-    # Répertoire où les fichiers JSON sont extraits
-    directory = "resultats"  # Vérifie si le répertoire existe et contient des fichiers JSON
+        # Charger les données JSON (remplace "items.json" par le bon fichier)
+    @st.cache_data
+    def load_data():
+        with open("items.json", "r", encoding="utf-8") as file:
+            return json.load(file)
     
-    # Vérifie si le répertoire existe
-    if not os.path.exists(directory):
-        st.error(f"Le répertoire {directory} n'existe pas. Vérifie le téléchargement des données.")
-    else:
-        # Récupère tous les fichiers JSON dans le répertoire
-        json_files = [f for f in os.listdir(directory) if f.endswith('.json')]
+    # Interface Streamlit
+    st.title("🔍 Recherche d'Item par ID")
     
-        # Vérifie si des fichiers JSON ont été trouvés
-        if not json_files:
-            st.warning(f"Aucun fichier JSON trouvé dans le répertoire {directory}.")
-        else:
-            st.title("📂 Liste des fichiers JSON")
-            st.write(f"Il y a {len(json_files)} fichiers JSON dans le répertoire {directory}.")
+    # Charger les données
+    data = load_data()
     
-            # Affiche les fichiers JSON dans l'interface
-            selected_file = st.selectbox("Choisir un fichier JSON", json_files)
+    # Barre de recherche
+    search_id = st.text_input("Entrez l'ID de l'item :", "")
     
-            # Affiche le contenu du fichier JSON sélectionné
-            if selected_file:
-                file_path = os.path.join(directory, selected_file)
-                try:
-                    # Ouvre et charge le fichier JSON
-                    with open(file_path, 'r') as file:
-                        data = json.load(file)
-                    
-                    # Affiche les données du fichier JSON
-                    st.json(data)
-                    
-                except Exception as e:
-                    # Gère les erreurs lors du chargement du fichier JSON
-                    st.error(f"Erreur lors du chargement du fichier {selected_file}: {e}")
-
-    key_selected = st.selectbox("Choisir une clé dans 'objectsById'", list(data['objectsById']['m_keys'].keys()))
-    value_selected = data['objectsById']['m_values'].get(key_selected)
+    # Affichage des résultats
+    if search_id:
+        try:
+            item_id = int(search_id)
+            item_info = next((item for item in data if item.get("id") == item_id), None)
     
-    if value_selected:
-        st.subheader(f"Détails de l'objet : {key_selected}")
-        st.write(value_selected)
+            if item_info:
+                st.subheader(f"📌 Détails de l'item ID: {item_id}")
+                st.json(item_info, expanded=True)  # Affiche les détails en format JSON
+    
+            else:
+                st.error("❌ Aucun item trouvé avec cet ID.")
+    
+        except ValueError:
+            st.warning("⚠️ L'ID doit être un nombre entier valide.")
 # ========================
 # Douda
 # ========================
