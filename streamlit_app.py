@@ -367,7 +367,7 @@ elif page == "DESIGNE":
     # Charger les données JSON (remplace "items.json" par le bon fichier)
     @st.cache_data
     def load_data():
-        with open("mount/tmp/resultats/items.json", "r", encoding="utf-8") as file:
+        with open("tmp/resultats/items.json", "r", encoding="utf-8") as file:
             return json.load(file)
     
     # Interface Streamlit
