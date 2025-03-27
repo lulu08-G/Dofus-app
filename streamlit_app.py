@@ -18,12 +18,11 @@ st.set_page_config(
 # ========================
 # MENU DE NAVIGATION
 # ========================
-    st.sidebar.title("🔀 Navigation")
+st.sidebar.title("🔀 Navigation")
     page = st.sidebar.radio("Aller à :", ["Accueil", "Test Image Item"])
-    
-    # ========================
-    # PAGE ACCUEIL
-    # ========================
+ # ========================
+# PAGE ACCUEIL
+# ========================
     if page == "Accueil":
     st.title("📂 Recherche du dossier 'resultats'")
     
