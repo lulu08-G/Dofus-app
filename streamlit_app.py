@@ -18,7 +18,14 @@ st.set_page_config(
 # ========================
 # MENU DE NAVIGATION
 # ========================
+st.sidebar.title("🔀 Navigation")
+page = st.sidebar.radio("Aller à :", ["Accueil", "Test Image Item"])
 
+# ========================
+# PAGE ACCUEIL
+# ========================
+if page == "Accueil":
+    st.title("🔨 Craft Dofus 🔨")
     # 📂 Définir le dossier racine à explorer
     ROOT_DIR = "/mount/src/dofus-app/resultats"  # Mets ton chemin ici
     
