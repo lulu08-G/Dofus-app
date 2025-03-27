@@ -23,7 +23,7 @@ page = st.sidebar.radio("Aller à :", ["Accueil", "Test Image Item"])
  # ========================
 # PAGE ACCUEIL
 # ========================
-    if page == "Accueil":
+if page == "Accueil":
     st.title("📂 Recherche du dossier 'resultats'")
     
     # 🔄 Explorer les répertoires connus
@@ -57,6 +57,8 @@ page = st.sidebar.radio("Aller à :", ["Accueil", "Test Image Item"])
             st.write(f"📍 `{path}`")
     else:
         st.error("❌ 'items.json' introuvable !")
+
+
 
 # ========================
 # PAGE TEST IMAGE ITEM
