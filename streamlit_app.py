@@ -364,36 +364,37 @@ elif page == "Page test":
 # ========================
 elif page == "DESIGNE":
     
-        # Charger les données JSON (remplace "items.json" par le bon fichier)
     # Charger les données JSON (remplace "items.json" par le bon fichier)
     @st.cache_data
     def load_data():
         with open("mount/tmp/resultats/items.json", "r", encoding="utf-8") as file:
             return json.load(file)
-        # Interface Streamlit
-        st.title("🔍 Recherche d'Item par ID")
-        
-        # Charger les données
-        data = load_data()
-        
-        # Barre de recherche
-        search_id = st.text_input("Entrez l'ID de l'item :", "")
-        
-        # Affichage des résultats
-        if search_id:
-            try:
-                item_id = int(search_id)
-                item_info = next((item for item in data if item.get("id") == item_id), None)
-        
-                if item_info:
-                    st.subheader(f"📌 Détails de l'item ID: {item_id}")
-                    st.json(item_info, expanded=True)  # Affiche les détails en format JSON
-        
-                else:
-                    st.error("❌ Aucun item trouvé avec cet ID.")
-        
-            except ValueError:
-                st.warning("⚠️ L'ID doit être un nombre entier valide.")
+    
+    # Interface Streamlit
+    st.title("🔍 Recherche d'Item par ID")
+    
+    # Charger les données
+    data = load_data()
+    
+    # Barre de recherche
+    search_id = st.text_input("Entrez l'ID de l'item :", "")
+    
+    # Affichage des résultats
+    if search_id:
+        try:
+            item_id = int(search_id)
+            item_info = next((item for item in data if item.get("id") == item_id), None)
+    
+            if item_info:
+                st.subheader(f"📌 Détails de l'item ID: {item_id}")
+                st.json(item_info, expanded=True)  # Affiche les détails en format JSON
+    
+            else:
+                st.error("❌ Aucun item trouvé avec cet ID.")
+    
+        except ValueError:
+            st.warning("⚠️ L'ID doit être un nombre entier valide.")
+    
 # ========================
 # Douda
 # ========================
