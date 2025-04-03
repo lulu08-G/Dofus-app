@@ -1,0 +1,67 @@
+name: Exécution et Commit de Doduda
+
+on:
+  workflow_dispatch: # Permet de lancer manuellement
+
+jobs:
+  run_doduda_and_commit:
+    runs-on: ubuntu-latest
+    steps:
+    # 1. Checkout du code de VOTRE dépôt
+    #    Important pour pouvoir commiter les changements dedans.
+    - name: Checkout du code du dépôt
+      uses: actions/checkout@v4 # Utilisez une version plus récente si possible
+
+    # 2. Télécharger et installer le binaire doduda
+    - name: Télécharger le binaire doduda
+      run: |
+        # Utilisation du script d'installation officiel
+        curl -s https://get.dofusdu.de/doduda | sh
+        # S'assurer qu'il est dans le PATH ou utiliser le chemin complet
+        # Le script l'installe normalement dans /usr/local/bin
+        echo "/usr/local/bin" >> $GITHUB_PATH
+
+    # 3. Exécuter doduda pour télécharger les données dans ./resultats
+    - name: Télécharger les données Dofus
+      run: |
+        # Crée le dossier de sortie s'il n'existe pas
+        mkdir -p ./resultats
+        # Exécute les commandes doduda
+        doduda --output ./resultats
+        doduda map --output ./resultats
+        echo "Données Doduda téléchargées dans ./resultats"
+
+    # 4. Configurer Git avec un utilisateur bot
+    - name: Configurer Git
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+    # 5. Ajouter, commiter et pousser les changements s'il y en a
+    - name: Commiter et Pousser les résultats
+      run: |
+        # Ajoute tout le contenu du dossier resultats au suivi Git
+        git add ./resultats/
+        # Vérifie s'il y a des changements à commiter
+        # `-s` pour silencieux, `--exit-code` pour sortir avec 1 s'il y a des changements
+        if ! git diff --staged --quiet; then
+          echo "Nouveaux changements détectés dans ./resultats. Commit en cours..."
+          # Crée un commit avec un message incluant la date/heure
+          git commit -m "Mise à jour des données Doduda - $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          # Pousse les changements vers la branche sur laquelle le workflow a été lancé
+          git push
+          echo "Changements poussés vers le dépôt."
+        else
+          echo "Aucun changement détecté dans ./resultats. Pas de commit nécessaire."
+        fi
+      env:
+        # Le token est nécessaire pour pouvoir pousser vers le dépôt
+        # actions/checkout le configure normalement, mais le spécifier explicitement est plus sûr
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    # L'étape upload-artifact a été supprimée car nous commitons directement.
+    # - name: Upload des résultats en tant qu'artefact
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: resultats-doduda
+    #     path: resultats/
