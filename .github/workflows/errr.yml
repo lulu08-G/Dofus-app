@@ -1,0 +1,61 @@
+name: Exécution et Commit de Doduda (avec Cache)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run_doduda_and_commit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    # 1. Checkout
+    - name: Checkout du code du dépôt
+      uses: actions/checkout@v4
+
+    # 2. Installation doduda (peut aussi être mis en cache, mais moins critique)
+    - name: Télécharger le binaire doduda
+      run: |
+        curl -s https://get.dofusdu.de/doduda | sh
+        echo "/usr/local/bin" >> $GITHUB_PATH
+
+    # 3. Mettre en cache/Restaurer le dossier resultats
+    - name: Cache du dossier resultats
+      id: cache-resultats # Donne un ID à l'étape pour vérifier plus tard
+      uses: actions/cache@v4
+      with:
+        path: ./resultats # Le dossier à mettre en cache
+        # Clé de cache: changez 'v1' si vous changez fondamentalement
+        # ce que le dossier contient ou la version de doduda.
+        # Le runner.os assure que le cache est spécifique à l'OS.
+        key: ${{ runner.os }}-doduda-resultats-v1
+
+    # 4. (Approche Recommandée avec Cache) : Toujours exécuter 'update'
+    #    Le cache accélère si les fichiers sont déjà là, 'update' vérifie/complète.
+    - name: Mettre à jour les données Dofus (utilisant le cache si présent)
+      run: |
+        echo "Vérification/Mise à jour des données Doduda..."
+        mkdir -p ./resultats # S'assurer que le dossier existe
+        # 'update' devrait être rapide si le cache a restauré les fichiers à jour
+        doduda map --output ./resultats
+        echo "Données Doduda mises à jour dans ./resultats"
+
+    # 5. Configurer Git
+    - name: Configurer Git
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+    # 6. Commiter et Pousser les résultats (inchangé)
+    - name: Commiter et Pousser les résultats
+      run: |
+        git add ./resultats/
+        if ! git diff --staged --quiet; then
+          echo "Nouveaux changements détectés dans ./resultats. Commit en cours..."
+          git commit -m "Mise à jour des données Doduda - $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          git push
+          echo "Changements poussés vers le dépôt."
+        else
+          echo "Aucun changement détecté dans ./resultats. Pas de commit nécessaire."
+        fi
